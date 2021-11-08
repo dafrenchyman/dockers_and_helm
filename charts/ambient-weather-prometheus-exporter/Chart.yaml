@@ -1,0 +1,19 @@
+apiVersion: v2
+appVersion: latest
+description: Prometheus metric exporter for Ambient Weather Stations
+name: ambient-weather-prometheus-exporter
+version: 1.0.0
+kubeVersion: ">=1.16.0-0"
+keywords:
+- ambient weather
+home: https://github.com/dafrenchyman/dockers_and_helm
+icon:
+sources:
+- https://github.com/dafrenchyman/dockers_and_helm
+maintainers:
+- name: julien-pierret
+  email: julien.pierret@gmail.com
+dependencies:
+- name: common
+  repository: https://library-charts.k8s-at-home.com
+  version: 4.0.1

@@ -1,0 +1,43 @@
+---
+
+#
+# IMPORTANT NOTE
+#
+# This chart inherits from k8s-at-home's common library chart. You can check their default values/options here:
+# https://github.com/k8s-at-home/library-charts/tree/main/charts/stable/common/values.yaml
+#
+
+# -- This is the default
+image:
+  # -- image repository
+  repository: dafrenchyman/ambient-weather-prometheus-exporter
+  # -- image tag
+  tag: latest
+  # -- image pull policy
+  pullPolicy: IfNotPresent
+
+# -- environment variables. See [image docs](https://github.com/dafrenchyman/dockers_and_helm/tree/master/dockers/AmbientWeatherPrometheus) for more details.
+# @default -- See below
+env:
+  # -- Set the container timezone
+  TZ: UTC
+  # -- Set Ambient Weather API key
+  AMBIENT_API_KEY: "<Your API Key>"
+
+# -- Configures service settings for the chart.
+# @default -- See values.yaml
+service:
+  main:
+    ports:
+      http:
+        port: 8000
+
+podAnnotations:
+  "prometheus.io/scrape": "true"
+  "prometheus.io/port": "8000"
+
+ingress:
+  # -- Enable and configure ingress settings for the chart under this key.
+  # @default -- See values.yaml
+  main:
+    enabled: false
