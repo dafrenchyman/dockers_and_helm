@@ -1,10 +1,18 @@
 #!/usr/bin/env python
 import logging
 import os
+import sys
 import time
 
 from ambient_api.ambientapi import AmbientAPI
 from prometheus_client import Gauge, start_http_server
+
+logging.basicConfig(
+    format="[%(asctime)s] {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    stream=sys.stdout,
+    level=logging.INFO,
+)
 
 APPLICATION_KEY = "b31a8cd9869345c986310f002f97eb1f0ffd7192d13547b4ae80643203b34f72"  # pragma: allowlist secret
 
@@ -243,7 +251,7 @@ ALL_GAUGES = {
         "unit": "degreesFahrenheit",
     },
     "hourlyrainin": {
-        "name": "indoorRainHourly",
+        "name": "outdoorRainHourly",
         "documentation": "Hourly Rain Rate, in/hr",
         "unit": "inchesPerHour",
     },
