@@ -14,6 +14,8 @@ idna==3.3
     # via requests
 prometheus-client==0.12.0
     # via -r requirements.in
+pyyaml==6.0
+    # via -r requirements.in
 requests==2.26.0
     # via ambient-api
 urllib3==1.26.7

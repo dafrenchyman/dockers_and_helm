@@ -29,7 +29,6 @@ docker image push dafrenchyman/ambient-weather-prometheus-exporter
 
 ## Running the docker
 
--
 - Get an API key from Ambient Weather.
 - Run it with Docker
 
