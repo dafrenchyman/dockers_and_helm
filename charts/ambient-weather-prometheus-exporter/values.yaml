@@ -16,7 +16,7 @@ image:
   # -- image pull policy
   pullPolicy: IfNotPresent
 
-# -- environment variables. See [image docs](https://github.com/dafrenchyman/dockers_and_helm/tree/master/dockers/AmbientWeatherPrometheus) for more details.
+# -- environment variables. See [image docs](https://github.com/dafrenchyman/dockers_and_helm/tree/master/containers/ambient-weather-prometheus-exporter) for more details.
 # @default -- See below
 env:
   # -- Set the container timezone
@@ -32,6 +32,7 @@ service:
       http:
         port: 8000
 
+# -- Annotations for Prometheus auto discovery
 podAnnotations:
   "prometheus.io/scrape": "true"
   "prometheus.io/port": "8000"
