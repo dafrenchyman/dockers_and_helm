@@ -1,0 +1,77 @@
+apiVersion: v1
+entries:
+  ambient-weather-prometheus-exporter:
+    - apiVersion: v2
+      appVersion: 1.0.0
+      created: "2021-11-21T20:07:21.490066087-08:00"
+      dependencies:
+        - name: common
+          repository: https://library-charts.k8s-at-home.com
+          version: 4.0.1
+      description: Prometheus metric exporter for Ambient Weather Stations
+      digest: e316442ecd1a60574d3e93398d1d9c9f600a4aa66345533d1bb671d28bd820c7
+      home: https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/ambient-weather-prometheus-exporter
+      keywords:
+        - ambient weather
+      kubeVersion: ">=1.16.0-0"
+      maintainers:
+        - email: julien.pierret@gmail.com
+          name: julien-pierret
+      name: ambient-weather-prometheus-exporter
+      sources:
+        - https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/ambient-weather-prometheus-exporter
+        - https://github.com/dafrenchyman/dockers_and_helm/tree/master/containers/ambient-weather-prometheus-exporter
+      urls:
+        - https://charts.mrsharky.com/ambient-weather-prometheus-exporter-0.1.0.tgz
+      version: 0.1.0
+  kavita:
+    - apiVersion: v2
+      appVersion: 0.4.8
+      created: "2021-11-21T20:07:21.493072991-08:00"
+      dependencies:
+        - name: common
+          repository: https://library-charts.k8s-at-home.com
+          version: 4.0.1
+      description: Kavita is a fast, feature rich, cross platform OSS manga server.
+      digest: 1ccf26b1971f9742d4ebad3ee1feecd2beb4623b42f146c916a4518dc1a27415
+      home: https://www.kavitareader.com/
+      keywords:
+        - kavita
+      kubeVersion: ">=1.16.0-0"
+      maintainers:
+        - email: julien.pierret@gmail.com
+          name: julien-pierret
+      name: kavita
+      sources:
+        - https://github.com/Kareadita/Kavita
+        - https://hub.docker.com/r/kizaing/kavita
+      urls:
+        - https://charts.mrsharky.com/kavita-0.1.0.tgz
+      version: 0.1.0
+  ubooquity:
+    - apiVersion: v2
+      appVersion: version-2.1.2
+      created: "2021-11-21T20:07:21.498414561-08:00"
+      dependencies:
+        - name: common
+          repository: https://library-charts.k8s-at-home.com
+          version: 4.0.1
+      description:
+        Ubooquity is a free, lightweight and easy-to-use home server for
+        your comics and ebooks. Use it to access your files from anywhere, with a tablet,
+        an e-reader, a phone or a computer.
+      digest: dd7a9f238b34ef3369959c99a0f649bb14c9800b3d4df4402a76c8254f0adcf3
+      home: https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/ubooquity
+      keywords:
+        - ubooquity
+      kubeVersion: ">=1.16.0-0"
+      maintainers:
+        - email: julien.pierret@gmail.com
+          name: julien-pierret
+      name: ubooquity
+      sources:
+        - https://hub.docker.com/r/linuxserver/ubooquity
+      urls:
+        - https://charts.mrsharky.com/ubooquity-0.1.0.tgz
+      version: 0.1.0
+generated: "2021-11-21T20:07:21.484354805-08:00"
