@@ -2,11 +2,11 @@ apiVersion: v2
 appVersion: version-2.1.2
 description: Ubooquity is a free, lightweight and easy-to-use home server for your comics and ebooks. Use it to access your files from anywhere, with a tablet, an e-reader, a phone or a computer.
 name: ubooquity
-version: 1.0.0
+version: 0.1.0
 kubeVersion: ">=1.16.0-0"
 keywords:
 - ubooquity
-home: ttps://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/ubooquity
+home: https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/ubooquity
 icon:
 sources:
 - https://hub.docker.com/r/linuxserver/ubooquity

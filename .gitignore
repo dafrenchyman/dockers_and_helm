@@ -152,3 +152,4 @@ static
 
 # Project related ignores (place project related ignores below here)
 /charts/*/charts
+/charts/*.tgz

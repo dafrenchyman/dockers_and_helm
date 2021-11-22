@@ -17,11 +17,19 @@ Chart uses the awesome common library from [k8s@home](https://github.com/k8s-at-
 To install the chart with the release name `my-release`:
 
 ```console
-$ helm repo add foo-bar http://charts.foo-bar.com
-$ helm install my-release dafrenchyman/{{ template "chart.name" . }}
+$ helm repo add mrsharky http://charts.mrsharky.com
+$ helm install my-release mrsharky/{{ template "chart.name" . }}
 ```
 
 ## Installing Chart from source
+
+Get the dependencies
+
+```bash
+helm dependency update
+```
+
+Install
 
 ```bash
 helm install {{ template "chart.name" . }} .

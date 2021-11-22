@@ -1,10 +1,10 @@
 # ubooquity
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![AppVersion: version-2.1.2](https://img.shields.io/badge/AppVersion-version--2.1.2-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![AppVersion: version-2.1.2](https://img.shields.io/badge/AppVersion-version--2.1.2-informational?style=flat-square)
 
 Ubooquity is a free, lightweight and easy-to-use home server for your comics and ebooks. Use it to access your files from anywhere, with a tablet, an e-reader, a phone or a computer.
 
-**Homepage:** <ttps://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/ubooquity>
+**Homepage:** <https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/ubooquity>
 
 ## Additional Information
 
@@ -15,11 +15,19 @@ Chart uses the awesome common library from [k8s@home](https://github.com/k8s-at-
 To install the chart with the release name `my-release`:
 
 ```console
-$ helm repo add foo-bar http://charts.foo-bar.com
-$ helm install my-release dafrenchyman/ubooquity
+$ helm repo add mrsharky http://charts.mrsharky.com
+$ helm install my-release mrsharky/ubooquity
 ```
 
 ## Installing Chart from source
+
+Get the dependencies
+
+```bash
+helm dependency update
+```
+
+Install
 
 ```bash
 helm install ubooquity .

@@ -1,6 +1,6 @@
 # ambient-weather-prometheus-exporter
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
 
 Prometheus metric exporter for Ambient Weather Stations
 
@@ -15,11 +15,19 @@ Chart uses the awesome common library from [k8s@home](https://github.com/k8s-at-
 To install the chart with the release name `my-release`:
 
 ```console
-$ helm repo add foo-bar http://charts.foo-bar.com
-$ helm install my-release dafrenchyman/ambient-weather-prometheus-exporter
+$ helm repo add mrsharky http://charts.mrsharky.com
+$ helm install my-release mrsharky/ambient-weather-prometheus-exporter
 ```
 
 ## Installing Chart from source
+
+Get the dependencies
+
+```bash
+helm dependency update
+```
+
+Install
 
 ```bash
 helm install ambient-weather-prometheus-exporter .
