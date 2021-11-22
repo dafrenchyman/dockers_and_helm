@@ -1,10 +1,10 @@
-# ubooquity
+# kavita
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![AppVersion: version-2.1.2](https://img.shields.io/badge/AppVersion-version--2.1.2-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![AppVersion: 0.4.8](https://img.shields.io/badge/AppVersion-0.4.8-informational?style=flat-square)
 
-Ubooquity is a free, lightweight and easy-to-use home server for your comics and ebooks. Use it to access your files from anywhere, with a tablet, an e-reader, a phone or a computer.
+Kavita is a fast, feature rich, cross platform OSS manga server.
 
-**Homepage:** <https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/ubooquity>
+**Homepage:** <https://www.kavitareader.com/>
 
 ## Additional Information
 
@@ -15,8 +15,8 @@ Chart uses the awesome common library from [k8s@home](https://github.com/k8s-at-
 To install the chart with the release name `my-release`:
 
 ```console
-$ helm repo add mrsharky http://charts.mrsharky.com
-$ helm install my-release mrsharky/ubooquity
+$ helm repo mrsharky http://charts.mrsharky.com
+$ helm install my-release mrsharky/kavita
 ```
 
 ## Installing Chart from source
@@ -30,24 +30,25 @@ helm dependency update
 Install
 
 ```bash
-helm install ubooquity .
+helm install kavita .
 ```
 
 Upgrade
 
 ```bash
-helm upgrade ubooquity .
+helm upgrade kavita .
 ```
 
 Uninstall
 
 ```bash
-helm delete ubooquity
+helm delete kavita
 ```
 
 ## Source Code
 
-* <https://hub.docker.com/r/linuxserver/ubooquity>
+* <https://github.com/Kareadita/Kavita>
+* <https://hub.docker.com/r/kizaing/kavita>
 
 ## Requirements
 
@@ -62,13 +63,12 @@ Kubernetes: `>=1.16.0-0`
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | env | object | See below | environment variables. See [image docs](https://docs.linuxserver.io/images/docker-ubooquity#environment-variables-e) for more details. |
-| env.MAXMEM | int | `1024` | To set the maximum memory. ( ex: set '1024' for 1GB ) |
 | env.PGID | string | `"1000"` | Set GroupID |
 | env.PUID | string | `"1000"` | Set UserID |
 | env.TZ | string | `"UTC"` | Set the container timezone |
 | image.pullPolicy | string | `"IfNotPresent"` | image pull policy |
-| image.repository | string | `"ghcr.io/linuxserver/ubooquity"` | image repository |
-| image.tag | string | `"version-2.1.2"` | image tag |
+| image.repository | string | `"kizaing/kavita"` | image repository |
+| image.tag | string | `"0.4.8"` | image tag |
 | ingress.main | object | See values.yaml | Enable and configure ingress settings for the chart under this key. |
 | persistence | object | See values.yaml | Configure persistence settings for the chart under this key. |
 | service | object | See values.yaml | Configures service settings for the chart. |

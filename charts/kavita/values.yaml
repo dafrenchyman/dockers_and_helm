@@ -7,12 +7,12 @@
 # https://github.com/k8s-at-home/library-charts/tree/main/charts/stable/common/values.yaml
 #
 
-# -- This is the default, you can also use requarks/wiki
+# -- This is the default
 image:
   # -- image repository
-  repository: ghcr.io/linuxserver/ubooquity
+  repository: kizaing/kavita
   # -- image tag
-  tag: version-2.1.2
+  tag: 0.4.8
   # -- image pull policy
   pullPolicy: IfNotPresent
 
@@ -26,7 +26,7 @@ env:
   # -- Set GroupID
   PGID: "1000"
   # -- To set the maximum memory. ( ex: set '1024' for 1GB )
-  MAXMEM: 1024
+  # MAXMEM: 100
 
 # -- Configures service settings for the chart.
 # @default -- See values.yaml
@@ -34,13 +34,7 @@ service:
   main:
     ports:
       http:
-        port: 2202
-  admin:
-    enabled: true
-    ports:
-      admin:
-        enabled: true
-        port: 2203
+        port: 5000
 
 
 ingress:
@@ -54,10 +48,7 @@ ingress:
 persistence:
   config:
     enabled: false
-    mountPath: /config
-  books:
+    mountPath: /kavita/config
+  manga:
     enabled: false
-    mountPath: /books
-  comics:
-    enabled: false
-    mountPath: /comics
+    mountPath: /manga

@@ -1,0 +1,20 @@
+apiVersion: v2
+appVersion: 0.4.8
+description: Kavita is a fast, feature rich, cross platform OSS manga server.
+name: kavita
+version: 0.1.0
+kubeVersion: ">=1.16.0-0"
+keywords:
+- kavita
+home: https://www.kavitareader.com/
+icon:
+sources:
+- https://github.com/Kareadita/Kavita
+- https://hub.docker.com/r/kizaing/kavita
+maintainers:
+- name: julien-pierret
+  email: julien.pierret@gmail.com
+dependencies:
+- name: common
+  repository: https://library-charts.k8s-at-home.com
+  version: 4.0.1
