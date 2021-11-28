@@ -9,6 +9,15 @@ if [ ! -z "$BLUECHERRY_GROUP_ID" ] && [ ! -z "$BLUECHERRY_USER_ID" ]; then
         chown -R bluecherry:bluecherry /tmp
 fi
 
+# Check if we need to create the bluecherry database
+if [[ ! -z "`mysql -qfsBe "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME='bluecherry'" 2>&1`" ]];
+then
+  echo "Bluecherry database already exists"
+else
+  echo "Bluecherry database doesn't exist, creating..."
+  bc-database-create
+fi
+
 { \
         echo bluecherry bluecherry/mysql_admin_login string $MYSQL_ADMIN_LOGIN; \
         echo bluecherry bluecherry/mysql_admin_password password $MYSQL_ADMIN_PASSWORD; \
