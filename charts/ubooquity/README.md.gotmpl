@@ -47,6 +47,12 @@ Uninstall
 helm delete {{ template "chart.name" . }}
 ```
 
+## Packaging
+```bash
+helm package {{ template "chart.name" . }}
+helm repo index . --url https://charts.mrsharky.com
+```
+
 {{ template "chart.sourcesSection" . }}
 
 {{ template "chart.requirementsSection" . }}

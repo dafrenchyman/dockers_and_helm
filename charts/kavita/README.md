@@ -45,6 +45,12 @@ Uninstall
 helm delete kavita
 ```
 
+## Packaging
+```bash
+helm package kavita
+helm repo index . --url https://charts.mrsharky.com
+```
+
 ## Source Code
 
 * <https://github.com/Kareadita/Kavita>

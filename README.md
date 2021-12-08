@@ -19,3 +19,7 @@
 # Run `pre-commit` locally.
 
 `pre-commit run --all-files`
+
+# Re-do a secrets scan
+
+`detect-secrets scan > .secrets.baseline`

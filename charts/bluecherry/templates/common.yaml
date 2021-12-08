@@ -1,0 +1,114 @@
+{{/* Make sure all variables are set properly */}}
+{{- include "common.values.setup" . }}
+
+{{/* Append the hardcoded settings */}}
+{{- define "bluecherry.hardcodedValues" -}}
+
+
+image:
+  {{ .Values.bluecherry.image | toYaml | nindent 2 }}
+
+configmap:
+  config:
+    enabled: true
+    data:
+      bluecherry.conf: |
+        version = "1.0";
+        bluecherry:
+        {
+            db:
+            {
+                # 0 = sqlite, 1 = pgsql, 2 = mysql
+                type = 2;
+                dbname = "{{ .Values.mysql.db }}";
+                user = "{{ .Values.mysql.user.user }}";
+                password = "{{ .Values.mysql.user.password }}";
+                host = "{{ .Values.mysql.host }}";
+                userhost = "{{ .Values.mysql.userhost }}";
+            };
+        };
+
+
+securityContext:
+  capabilities:
+    add:
+      - NET_BIND_SERVICE
+      {{- if not (.Values.bluecherry.vaapi.enabled) }}
+      - NET_ADMIN
+      {{- end }}
+  privileged: true
+
+persistence:
+  config:
+    enabled: true
+    type: configMap
+    mountPath: /etc/bluecherry.conf
+    subPath: bluecherry.conf
+    name: {{ .Release.Name }}-config
+  {{- if (.Values.bluecherry.vaapi.enabled) }}
+  vaapi:
+    enabled: true
+    type: hostPath
+    mountPath: /dev/dri
+    hostPath: /dev/dri
+  {{- end }}
+
+env:
+  TZ: {{ .Values.bluecherry.timezone }}
+  MYSQL_ADMIN_LOGIN: {{ .Values.mysql.admin.user }}
+  MYSQL_ADMIN_PASSWORD: {{ .Values.mysql.admin.password }}
+  MYSQL_HOST: {{ .Values.mysql.host }}
+  BLUECHERRY_DB_HOST: {{ .Values.mysql.host }}
+  BLUECHERRY_DB_USER: {{ .Values.mysql.user.user }}
+  BLUECHERRY_DB_PASSWORD: {{ .Values.mysql.user.password }}
+  BLUECHERRY_DB_NAME: {{ .Values.mysql.db }}
+  BLUECHERRY_USERHOST: "{{ .Values.mysql.userhost }}"
+  BLUECHERRY_GROUP_ID: {{ .Values.bluecherry.gid }}
+  BLUECHERRY_USER_ID: {{ .Values.bluecherry.uid }}
+
+initContainers:
+  mkrecordingsdirs:
+    image: {{.Values.mkrecordingsdirs.image.repository }}:{{ .Values.mkrecordingsdirs.image.tag }}
+    imagePullPolicy: {{ .Values.mkrecordingsdirs.image.pullPolicy }}
+    command:
+    - sh
+    - -c
+    - chown -R {{ .Values.bluecherry.uid }}:{{ .Values.bluecherry.gid }} /var/lib/bluecherry/recordings
+    {{- if .Values.persistence.recordings.enabled }}
+    volumeMounts:
+    - name: recordings
+      mountPath: /var/lib/bluecherry/recordings
+    {{- end }}
+
+{{- if not (.Values.mysql.useExisting) }}
+additionalContainers:
+  mysql:
+{{- end }}
+
+service:
+  main:
+    primary: true
+    ports:
+      http:
+        enabled: true
+        port: 7001
+      bluecherry-tcp1:
+        enabled: true
+        port: 554
+        protocol: TCP
+      bluecherry-udp1:
+        enabled: true
+        port: 554
+        protocol: UDP
+      bluecherry-tcp2:
+        enabled: true
+        port: 7002
+        protocol: TCP
+    externalTrafficPolicy: Local
+
+
+{{- end -}}
+{{- $_ := mergeOverwrite .Values (include "bluecherry.hardcodedValues" . | fromYaml) -}}
+
+{{/* Render the templates */}}
+{{ include "common.all" . }}

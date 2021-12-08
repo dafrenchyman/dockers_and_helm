@@ -1,0 +1,22 @@
+apiVersion: v2
+appVersion: 1.0.0
+description: Bluecherry DVR
+name: bluecherry
+version: 0.1.0
+kubeVersion: ">=1.16.0-0"
+keywords:
+- bluecherry
+home: https://www.bluecherrydvr.com/
+icon:
+sources:
+- https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/bluecherry
+- https://github.com/dafrenchyman/dockers_and_helm/tree/master/containers/bluecherry-server
+- https://github.com/bluecherrydvr/bluecherry-docker
+- https://hub.docker.com/r/dafrenchyman/bluecherry-server
+maintainers:
+- name: julien-pierret
+  email: julien.pierret@gmail.com
+dependencies:
+- name: common
+  repository: https://library-charts.k8s-at-home.com
+  version: 4.2.0

@@ -45,6 +45,12 @@ Uninstall
 helm delete ubooquity
 ```
 
+## Packaging
+```bash
+helm package ubooquity
+helm repo index . --url https://charts.mrsharky.com
+```
+
 ## Source Code
 
 * <https://hub.docker.com/r/linuxserver/ubooquity>

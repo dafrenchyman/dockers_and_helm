@@ -45,6 +45,12 @@ Uninstall
 helm delete ambient-weather-prometheus-exporter
 ```
 
+## Packaging
+```bash
+helm package ambient-weather-prometheus-exporter
+helm repo index . --url https://charts.mrsharky.com
+```
+
 ## Source Code
 
 * <https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/ambient-weather-prometheus-exporter>

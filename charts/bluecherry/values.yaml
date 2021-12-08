@@ -1,0 +1,66 @@
+#
+# IMPORTANT NOTE
+#
+# This chart inherits from our common library chart. You can check the default values/options here:
+# https://github.com/k8s-at-home/library-charts/tree/main/charts/stable/common/values.yaml
+#
+
+ingress:
+  # -- Enable and configure ingress settings for the chart under this key.
+  # @default -- See values.yaml
+  main:
+    enabled: false
+
+# -- Configure persistence settings for the chart under this key.
+# @default -- See values.yaml
+persistence:
+  recordings:
+    enabled: false
+    mountPath: /var/lib/bluecherry/recordings
+
+bluecherry:
+  image:
+    # -- bluecherryServer image repository
+    repository: dafrenchyman/bluecherry-server
+    # -- bluecherryServer image tag
+    tag: latest
+    # -- bluecherryServer image pull policy
+    pullPolicy: Always
+  # -- UID to run bluecherry user as. If you want to access recordings from the host, it is recommended to set them the same as a user/group that you want access to read it. run `id $(whoami)` to find the UID/GID of your user
+  uid: "1000"
+  # -- GID to run bluecherry user as. If you want to access recordings from the host, it is recommended to set them the same as a user/group that you want access to read it. run `id $(whoami)` to find the UID/GID of your user
+  gid: "1000"
+  # -- bluecherryServer image timezone
+  timezone: America/Los_Angeles
+  vaapi:
+    # -- bluecherryServer enable if you have a supported VAAPI device and /dev/dri exists on the host system.
+    enabled: true
+
+mysql:
+  # -- Use an existing MySQL server
+  useExisting: true
+  # -- MySQL host
+  host: changeMe
+  # -- MySQL Database name for the bluecherry database
+  db: bluecherry
+  # -- MySQL bluecherry user at this hostmask. This should be the IP of your bluecherry container
+  userhost: "%"
+  admin:
+    # -- MySQL admin user
+    user: root
+    # -- MySQL admin password
+    password: changeMe
+  user:
+    # -- MySQL bluecherry user to create/use
+    user: bluecherry
+    # -- MySQL bluecherry password
+    password: changeMe
+
+mkrecordingsdirs:
+  image:
+    # -- image repository
+    repository: busybox
+    # -- image tag
+    tag: 1.34.0
+    # -- image pull policy
+    pullPolicy: IfNotPresent
