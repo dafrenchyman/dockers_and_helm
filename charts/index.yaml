@@ -3,7 +3,7 @@ entries:
   ambient-weather-prometheus-exporter:
     - apiVersion: v2
       appVersion: 1.0.0
-      created: "2021-11-21T20:07:21.490066087-08:00"
+      created: "2021-12-08T11:37:14.680509309-08:00"
       dependencies:
         - name: common
           repository: https://library-charts.k8s-at-home.com
@@ -24,10 +24,60 @@ entries:
       urls:
         - https://charts.mrsharky.com/ambient-weather-prometheus-exporter-0.1.0.tgz
       version: 0.1.0
+  bluecherry:
+    - apiVersion: v2
+      appVersion: 1.0.0
+      created: "2021-12-08T11:37:14.684788011-08:00"
+      dependencies:
+        - name: common
+          repository: https://library-charts.k8s-at-home.com
+          version: 4.2.0
+      description: Bluecherry DVR
+      digest: 56ce8568a0833092a629286cf4899cc4d2b40600cb93fc5d9b8b3ff69c933b83
+      home: https://www.bluecherrydvr.com/
+      keywords:
+        - bluecherry
+      kubeVersion: ">=1.16.0-0"
+      maintainers:
+        - email: julien.pierret@gmail.com
+          name: julien-pierret
+      name: bluecherry
+      sources:
+        - https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/bluecherry
+        - https://github.com/dafrenchyman/dockers_and_helm/tree/master/containers/bluecherry-server
+        - https://github.com/bluecherrydvr/bluecherry-docker
+        - https://hub.docker.com/r/dafrenchyman/bluecherry-server
+      urls:
+        - https://charts.mrsharky.com/bluecherry-0.1.0.tgz
+      version: 0.1.0
+  dropbox:
+    - apiVersion: v2
+      appVersion: 1.10.0
+      created: "2021-12-08T11:37:14.692154929-08:00"
+      dependencies:
+        - name: common
+          repository: https://library-charts.k8s-at-home.com
+          version: 4.0.1
+      description: Run Dropbox service
+      digest: 4630bb4aafeb2c4716e075b0f88a0826abc68de78ca9cfceec1936d4798a1d31
+      home: https://github.com/otherguy/docker-dropbox
+      keywords:
+        - dropbox
+      kubeVersion: ">=1.16.0-0"
+      maintainers:
+        - email: julien.pierret@gmail.com
+          name: julien-pierret
+      name: dropbox
+      sources:
+        - https://github.com/otherguy/docker-dropbox
+        - https://hub.docker.com/r/otherguy/dropbox
+      urls:
+        - https://charts.mrsharky.com/dropbox-0.1.0.tgz
+      version: 0.1.0
   kavita:
     - apiVersion: v2
       appVersion: 0.4.8
-      created: "2021-11-21T20:07:21.493072991-08:00"
+      created: "2021-12-08T11:37:14.6962246-08:00"
       dependencies:
         - name: common
           repository: https://library-charts.k8s-at-home.com
@@ -51,7 +101,7 @@ entries:
   ubooquity:
     - apiVersion: v2
       appVersion: version-2.1.2
-      created: "2021-11-21T20:07:21.498414561-08:00"
+      created: "2021-12-08T11:37:14.699558344-08:00"
       dependencies:
         - name: common
           repository: https://library-charts.k8s-at-home.com
@@ -74,4 +124,4 @@ entries:
       urls:
         - https://charts.mrsharky.com/ubooquity-0.1.0.tgz
       version: 0.1.0
-generated: "2021-11-21T20:07:21.484354805-08:00"
+generated: "2021-12-08T11:37:14.676561105-08:00"
