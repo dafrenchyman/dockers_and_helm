@@ -1,0 +1,23 @@
+apiVersion: v2
+appVersion: 1.0.0
+description: ps3netsrv
+name: ps3netsrv
+version: 0.1.0
+kubeVersion: ">=1.16.0-0"
+keywords:
+- ps3netsrv
+- ps3
+home: https://github.com/aldostools/ps3netsrv-go
+icon:
+sources:
+- https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/ps3netsrv
+- https://hub.docker.com/r/shawly/ps3netsrv/
+- https://github.com/shawly/docker-ps3netsrv
+- https://github.com/aldostools/ps3netsrv-go
+maintainers:
+- name: julien-pierret
+  email: julien.pierret@gmail.com
+dependencies:
+- name: common
+  repository: https://library-charts.k8s-at-home.com
+  version: 4.2.0

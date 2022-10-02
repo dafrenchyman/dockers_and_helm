@@ -1,0 +1,62 @@
+{{ template "chart.header" . }}
+
+{{ template "chart.badgesSection" . }}
+
+{{ template "chart.deprecationWarning" . }}
+
+{{ template "chart.description" . }}
+
+{{ template "chart.homepageLine" . }}
+
+## Additional Information
+
+Chart uses the awesome common library from [k8s@home](https://github.com/k8s-at-home)
+
+## Installing Chart from repo
+
+To install the chart with the release name `my-release`:
+
+```console
+$ helm repo add mrsharky http://charts.mrsharky.com
+$ helm install my-release mrsharky/{{ template "chart.name" . }}
+```
+
+## Installing Chart from source
+
+Get the dependencies
+
+```bash
+helm dependency update
+```
+
+Install
+
+```bash
+helm install {{ template "chart.name" . }} .
+```
+
+Upgrade
+
+```bash
+helm upgrade {{ template "chart.name" . }} .
+```
+
+Uninstall
+
+```bash
+helm delete {{ template "chart.name" . }}
+```
+
+## Packaging
+```bash
+helm package {{ template "chart.name" . }}
+helm repo index . --url https://charts.mrsharky.com
+```
+
+{{ template "chart.sourcesSection" . }}
+
+{{ template "chart.requirementsSection" . }}
+
+{{ template "chart.valuesSection" . }}
+
+{{ template "helm-docs.versionFooter" . }}

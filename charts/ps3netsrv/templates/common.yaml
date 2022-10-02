@@ -1,0 +1,34 @@
+{{/* Make sure all variables are set properly */}}
+{{- include "common.values.setup" . }}
+
+{{/* Append the hardcoded settings */}}
+{{- define "ps3netsrv.hardcodedValues" -}}
+
+image:
+  {{ .Values.ps3netsrv.image | toYaml | nindent 2 }}
+
+env:
+  TZ: {{ .Values.ps3netsrv.timezone }}
+  USER_ID:  {{ .Values.ps3netsrv.uid }}
+  GROUP_ID:  {{ .Values.ps3netsrv.gid }}
+
+initContainers:
+  mkgamedirectories:
+    image: {{.Values.mkgamedirectories.image.repository }}:{{ .Values.mkgamedirectories.image.tag }}
+    imagePullPolicy: {{ .Values.mkgamedirectories.image.pullPolicy }}
+    command:
+    - sh
+    - -c
+    - chown -R {{ .Values.ps3netsrv.uid }}:{{ .Values.ps3netsrv.gid }} /games && mkdir -p /games/GAMES && mkdir -p /games/PS3ISO
+    {{- if .Values.persistence.games.enabled }}
+    volumeMounts:
+    - name: games
+      mountPath: /games
+    {{- end }}
+
+
+{{- end -}}
+{{- $_ := mergeOverwrite .Values (include "ps3netsrv.hardcodedValues" . | fromYaml) -}}
+
+{{/* Render the templates */}}
+{{ include "common.all" . }}

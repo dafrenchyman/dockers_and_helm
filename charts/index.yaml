@@ -3,7 +3,7 @@ entries:
   ambient-weather-prometheus-exporter:
     - apiVersion: v2
       appVersion: 1.0.0
-      created: "2021-12-08T11:37:14.680509309-08:00"
+      created: "2022-10-01T18:14:11.379513243-07:00"
       dependencies:
         - name: common
           repository: https://library-charts.k8s-at-home.com
@@ -27,7 +27,7 @@ entries:
   bluecherry:
     - apiVersion: v2
       appVersion: 1.0.0
-      created: "2021-12-08T11:37:14.684788011-08:00"
+      created: "2022-10-01T18:14:11.384000614-07:00"
       dependencies:
         - name: common
           repository: https://library-charts.k8s-at-home.com
@@ -53,7 +53,7 @@ entries:
   dropbox:
     - apiVersion: v2
       appVersion: 1.10.0
-      created: "2021-12-08T11:37:14.692154929-08:00"
+      created: "2022-10-01T18:14:11.387356682-07:00"
       dependencies:
         - name: common
           repository: https://library-charts.k8s-at-home.com
@@ -77,7 +77,7 @@ entries:
   kavita:
     - apiVersion: v2
       appVersion: 0.4.8
-      created: "2021-12-08T11:37:14.6962246-08:00"
+      created: "2022-10-01T18:14:11.390363708-07:00"
       dependencies:
         - name: common
           repository: https://library-charts.k8s-at-home.com
@@ -98,10 +98,37 @@ entries:
       urls:
         - https://charts.mrsharky.com/kavita-0.1.0.tgz
       version: 0.1.0
+  ps3netsrv:
+    - apiVersion: v2
+      appVersion: 1.0.0
+      created: "2022-10-01T18:14:11.39458354-07:00"
+      dependencies:
+        - name: common
+          repository: https://library-charts.k8s-at-home.com
+          version: 4.2.0
+      description: ps3netsrv
+      digest: a8065b9f6cdbbac105b9977dbeac2656b4a3d2c3761023b2b12d99d94d250371
+      home: https://github.com/aldostools/ps3netsrv-go
+      keywords:
+        - ps3netsrv
+        - ps3
+      kubeVersion: ">=1.16.0-0"
+      maintainers:
+        - email: julien.pierret@gmail.com
+          name: julien-pierret
+      name: ps3netsrv
+      sources:
+        - https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/ps3netsrv
+        - https://hub.docker.com/r/shawly/ps3netsrv/
+        - https://github.com/shawly/docker-ps3netsrv
+        - https://github.com/aldostools/ps3netsrv-go
+      urls:
+        - https://charts.mrsharky.com/ps3netsrv-0.1.0.tgz
+      version: 0.1.0
   ubooquity:
     - apiVersion: v2
       appVersion: version-2.1.2
-      created: "2021-12-08T11:37:14.699558344-08:00"
+      created: "2022-10-01T18:14:11.399031077-07:00"
       dependencies:
         - name: common
           repository: https://library-charts.k8s-at-home.com
@@ -124,4 +151,4 @@ entries:
       urls:
         - https://charts.mrsharky.com/ubooquity-0.1.0.tgz
       version: 0.1.0
-generated: "2021-12-08T11:37:14.676561105-08:00"
+generated: "2022-10-01T18:14:11.373367184-07:00"
