@@ -1,0 +1,61 @@
+# values.yaml — nzbget-exporter chart
+# This file is meant for the bjw-s "common" library chart.
+# Ref docs: https://github.com/bjw-s-labs/helm-charts/tree/main/charts/library/common
+
+controllers:
+  main:
+    type: deployment
+    replicas: 1
+    strategy: Recreate
+
+    containers:
+      app:
+        image:
+          repository: ghcr.io/frebib/nzbget-exporter
+          tag: latest
+          pullPolicy: IfNotPresent
+
+        env:
+          - name: NZBGET_HOST
+            value: "http://nzbget:6789"
+          - name: NZBGET_USERNAME
+            value: "nzbget"
+          - name: NZBGET_PASSWORD
+            value: "tegbzn6789"
+          - name: TZ
+            value: "America/Los_Angeles"
+
+        ports:
+          - name: web
+            containerPort: 9452
+            protocol: TCP
+service:
+  main:
+    enabled: true
+    controller: main
+    ports:
+      http:
+        port: 9452
+        targetPort: web
+        protocol: TCP
+
+ingress:
+  main:
+    enabled: true
+    className: nginx
+    annotations: {}
+    hosts:
+      - host: nzbget
+        paths:
+          - path: /
+            pathType: Prefix
+            service:
+              identifier: main
+              port: http
+    # Add TLS if you have cert-manager (recommended)
+    tls: []
+    # Example:
+    # tls:
+    #   - hosts:
+    #       - nzbget-exporter.server.home.arpa
+    #     secretName: nzbget-exporter-tls

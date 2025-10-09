@@ -1,0 +1,19 @@
+apiVersion: v2
+name: nzbget-exporter
+description: NZBget Prometheus Exporter
+type: application
+kubeVersion: ">=1.24.0-0"
+maintainers:
+- name: julien-pierret
+  email: julien.pierret@gmail.com
+dependencies:
+  - name: common
+    repository: https://bjw-s-labs.github.io/helm-charts/
+    version: 4.3.0
+home: https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/nzbget-exporter
+sources:
+  - https://github.com/frebib/nzbget-exporter
+  - https://bjw-s-labs.github.io/helm-charts/
+icon:
+version: 0.1.0
+appVersion: 0.1.0
