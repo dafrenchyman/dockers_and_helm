@@ -1,0 +1,19 @@
+apiVersion: v2
+name: termix
+description: Termix
+type: application
+kubeVersion: ">=1.24.0-0"
+maintainers:
+- name: julien-pierret
+  email: julien.pierret@gmail.com
+dependencies:
+  - name: common
+    repository: https://bjw-s-labs.github.io/helm-charts/
+    version: 4.3.0
+home: https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/termix
+sources:
+  - https://github.com/LukeGus/Termix?tab=readme-ov-file
+  - https://bjw-s-labs.github.io/helm-charts/
+icon:
+version: 0.1.0
+appVersion: 0.1.0

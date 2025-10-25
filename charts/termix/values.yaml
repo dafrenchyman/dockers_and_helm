@@ -1,0 +1,64 @@
+# values.yaml — nzbget-exporter chart
+# This file is meant for the bjw-s "common" library chart.
+# Ref docs: https://github.com/bjw-s-labs/helm-charts/tree/main/charts/library/common
+
+controllers:
+  main:
+    type: deployment
+    strategy: Recreate
+    containers:
+      app:
+        image:
+          repository: ghcr.io/lukegus/termix
+          tag: latest
+          pullPolicy: IfNotPresent
+        env:
+          - name: TZ
+            value: "America/Los_Angeles"
+          - name: PORT
+            value: "8080"
+          - name: Enable_SSL
+            value: "false"
+        ports:
+          - name: web
+            containerPort: 8080
+            protocol: TCP
+
+service:
+  main:
+    enabled: true
+    controller: main
+    ports:
+      http:
+        port: 8080
+        targetPort: web
+        protocol: TCP
+
+persistence:
+  # Data goes here
+  data:
+    enabled: false
+  # Imports go here
+  import:
+    enabled: false
+
+ingress:
+  main:
+    enabled: true
+    className: nginx
+    annotations: {}
+    hosts:
+      - host: termix
+        paths:
+          - path: /
+            pathType: Prefix
+            service:
+              identifier: main
+              port: http
+    # Add TLS if you have cert-manager (recommended)
+    tls: []
+    # Example:
+    # tls:
+    #   - hosts:
+    #       - nzbget-exporter.server.home.arpa
+    #     secretName: nzbget-exporter-tls

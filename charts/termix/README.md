@@ -1,10 +1,10 @@
-# nzbget-exporter
+# termix
 
 ![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
 
-NZBget Prometheus Exporter
+Termix
 
-**Homepage:** <https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/nzbget-exporter>
+**Homepage:** <https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/termix>
 
 ## Additional Information
 
@@ -16,7 +16,7 @@ To install the chart with the release name `my-release`:
 
 ```console
 $ helm repo add mrsharky http://charts.mrsharky.com
-$ helm install my-release mrsharky/nzbget-exporter
+$ helm install my-release mrsharky/termix
 ```
 
 ## Installing Chart from source
@@ -36,24 +36,24 @@ helm lint .
 Install/Upgrade
 
 ```bash
-helm upgrade --install nzbget-exporter . -f values.yaml  --wait --timeout 5m --atomic
+helm upgrade --install termix . -f values.yaml  --wait --timeout 5m --atomic
 ```
 
 Uninstall
 
 ```bash
-helm delete nzbget-exporter
+helm delete termix
 ```
 
 ## Packaging
 ```bash
-helm package nzbget-exporter
+helm package termix
 helm repo index . --url https://charts.mrsharky.com
 ```
 
 ## Source Code
 
-* <https://github.com/frebib/nzbget-exporter>
+* <https://github.com/LukeGus/Termix?tab=readme-ov-file>
 * <https://bjw-s-labs.github.io/helm-charts/>
 
 ## Requirements
@@ -68,35 +68,34 @@ Kubernetes: `>=1.24.0-0`
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| controllers.main.containers.app.env[0].name | string | `"NZBGET_HOST"` |  |
-| controllers.main.containers.app.env[0].value | string | `"http://nzbget:6789"` |  |
-| controllers.main.containers.app.env[1].name | string | `"NZBGET_USERNAME"` |  |
-| controllers.main.containers.app.env[1].value | string | `"nzbget"` |  |
-| controllers.main.containers.app.env[2].name | string | `"NZBGET_PASSWORD"` |  |
-| controllers.main.containers.app.env[2].value | string | `"tegbzn6789"` |  |
-| controllers.main.containers.app.env[3].name | string | `"TZ"` |  |
-| controllers.main.containers.app.env[3].value | string | `"America/Los_Angeles"` |  |
+| controllers.main.containers.app.env[0].name | string | `"TZ"` |  |
+| controllers.main.containers.app.env[0].value | string | `"America/Los_Angeles"` |  |
+| controllers.main.containers.app.env[1].name | string | `"PORT"` |  |
+| controllers.main.containers.app.env[1].value | string | `"8080"` |  |
+| controllers.main.containers.app.env[2].name | string | `"Enable_SSL"` |  |
+| controllers.main.containers.app.env[2].value | string | `"false"` |  |
 | controllers.main.containers.app.image.pullPolicy | string | `"IfNotPresent"` |  |
-| controllers.main.containers.app.image.repository | string | `"ghcr.io/frebib/nzbget-exporter"` |  |
+| controllers.main.containers.app.image.repository | string | `"ghcr.io/lukegus/termix"` |  |
 | controllers.main.containers.app.image.tag | string | `"latest"` |  |
-| controllers.main.containers.app.ports[0].containerPort | int | `9452` |  |
+| controllers.main.containers.app.ports[0].containerPort | int | `8080` |  |
 | controllers.main.containers.app.ports[0].name | string | `"web"` |  |
 | controllers.main.containers.app.ports[0].protocol | string | `"TCP"` |  |
-| controllers.main.replicas | int | `1` |  |
 | controllers.main.strategy | string | `"Recreate"` |  |
 | controllers.main.type | string | `"deployment"` |  |
 | ingress.main.annotations | object | `{}` |  |
 | ingress.main.className | string | `"nginx"` |  |
 | ingress.main.enabled | bool | `true` |  |
-| ingress.main.hosts[0].host | string | `"nzbget"` |  |
+| ingress.main.hosts[0].host | string | `"termix"` |  |
 | ingress.main.hosts[0].paths[0].path | string | `"/"` |  |
 | ingress.main.hosts[0].paths[0].pathType | string | `"Prefix"` |  |
 | ingress.main.hosts[0].paths[0].service.identifier | string | `"main"` |  |
 | ingress.main.hosts[0].paths[0].service.port | string | `"http"` |  |
 | ingress.main.tls | list | `[]` |  |
+| persistence.data.enabled | bool | `false` |  |
+| persistence.import.enabled | bool | `false` |  |
 | service.main.controller | string | `"main"` |  |
 | service.main.enabled | bool | `true` |  |
-| service.main.ports.http.port | int | `9452` |  |
+| service.main.ports.http.port | int | `8080` |  |
 | service.main.ports.http.protocol | string | `"TCP"` |  |
 | service.main.ports.http.targetPort | string | `"web"` |  |
 

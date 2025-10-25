@@ -3,7 +3,7 @@ entries:
   ambient-weather-prometheus-exporter:
     - apiVersion: v2
       appVersion: 1.0.0
-      created: "2022-10-01T18:14:11.379513243-07:00"
+      created: "2025-10-11T17:23:53.976454707-07:00"
       dependencies:
         - name: common
           repository: https://library-charts.k8s-at-home.com
@@ -27,7 +27,7 @@ entries:
   bluecherry:
     - apiVersion: v2
       appVersion: 1.0.0
-      created: "2022-10-01T18:14:11.384000614-07:00"
+      created: "2025-10-11T17:23:53.977621656-07:00"
       dependencies:
         - name: common
           repository: https://library-charts.k8s-at-home.com
@@ -53,7 +53,7 @@ entries:
   dropbox:
     - apiVersion: v2
       appVersion: 1.10.0
-      created: "2022-10-01T18:14:11.387356682-07:00"
+      created: "2025-10-11T17:23:53.978687872-07:00"
       dependencies:
         - name: common
           repository: https://library-charts.k8s-at-home.com
@@ -77,7 +77,7 @@ entries:
   kavita:
     - apiVersion: v2
       appVersion: 0.4.8
-      created: "2022-10-01T18:14:11.390363708-07:00"
+      created: "2025-10-11T17:23:53.979847366-07:00"
       dependencies:
         - name: common
           repository: https://library-charts.k8s-at-home.com
@@ -98,16 +98,39 @@ entries:
       urls:
         - https://charts.mrsharky.com/kavita-0.1.0.tgz
       version: 0.1.0
+  nzbget-exporter:
+    - apiVersion: v2
+      appVersion: 0.1.0
+      created: "2025-10-11T17:23:53.982668855-07:00"
+      dependencies:
+        - name: common
+          repository: https://bjw-s-labs.github.io/helm-charts/
+          version: 4.3.0
+      description: NZBget Prometheus Exporter
+      digest: d44ff5e805e05746b546052a697a28ebe3f834d6460c3fc5e29cf5fee77c1683 # pragma: allowlist secret
+      home: https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/nzbget-exporter
+      kubeVersion: ">=1.24.0-0"
+      maintainers:
+        - email: julien.pierret@gmail.com
+          name: julien-pierret
+      name: nzbget-exporter
+      sources:
+        - https://github.com/frebib/nzbget-exporter
+        - https://bjw-s-labs.github.io/helm-charts/
+      type: application
+      urls:
+        - https://charts.mrsharky.com/nzbget-exporter-0.1.0.tgz
+      version: 0.1.0
   ps3netsrv:
     - apiVersion: v2
       appVersion: 1.0.0
-      created: "2022-10-01T18:14:11.39458354-07:00"
+      created: "2025-10-11T17:23:53.983805706-07:00"
       dependencies:
         - name: common
           repository: https://library-charts.k8s-at-home.com
           version: 4.2.0
       description: ps3netsrv
-      digest: a8065b9f6cdbbac105b9977dbeac2656b4a3d2c3761023b2b12d99d94d250371
+      digest: 26d165134e9bae0ceee39c9817494cb6c4a3cc24492e1c15b234e2a4e65c2c2f # pragma: allowlist secret
       home: https://github.com/aldostools/ps3netsrv-go
       keywords:
         - ps3netsrv
@@ -125,10 +148,127 @@ entries:
       urls:
         - https://charts.mrsharky.com/ps3netsrv-0.1.0.tgz
       version: 0.1.0
+  redash:
+    - apiVersion: v1
+      appVersion: 10.0.0.b50633
+      created: "2025-10-11T17:23:54.000383012-07:00"
+      dependencies:
+        - condition: redis.enabled
+          name: redis
+          repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+          version: ^10.8.2
+        - condition: postgresql.enabled
+          name: postgresql
+          repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+          version: ^8.10.14
+      description:
+        Redash is an open source tool built for teams to query, visualize
+        and collaborate.
+      digest: 223227a968b7924d56bdeb861680816998270d30b138080b2e2cd3f4ef7bd5a1 # pragma: allowlist secret
+      home: https://redash.io/
+      icon: https://redash.io/assets/images/elements/redash-logo.svg
+      keywords:
+        - redash
+        - analytics
+        - visualization
+      maintainers:
+        - email: owen.barton@civicactions.com
+          name: Owen Barton
+      name: redash
+      sources:
+        - https://github.com/getredash/redash
+      urls:
+        - https://charts.mrsharky.com/redash-3.0.2.tgz
+      version: 3.0.2
+    - apiVersion: v1
+      appVersion: 10.0.0.b50633
+      created: "2025-10-11T17:23:53.995771576-07:00"
+      dependencies:
+        - condition: redis.enabled
+          name: redis
+          repository: https://charts.bitnami.com/bitnami
+          version: ^16.12.1
+        - condition: postgresql.enabled
+          name: postgresql
+          repository: https://charts.bitnami.com/bitnami
+          version: ^11.6.2
+      description:
+        Redash is an open source tool built for teams to query, visualize
+        and collaborate.
+      digest: efae0afd44334127240601cb23b7889e9cd3f8564da6a0e34871fce6bced1504 # pragma: allowlist secret
+      home: https://redash.io/
+      icon: https://redash.io/assets/images/elements/redash-logo.svg
+      keywords:
+        - redash
+        - analytics
+        - visualization
+      maintainers:
+        - email: owen.barton@civicactions.com
+          name: Owen Barton
+      name: redash
+      sources:
+        - https://github.com/getredash/redash
+      urls:
+        - https://charts.mrsharky.com/redash-3.0.1.tgz
+      version: 3.0.1
+    - apiVersion: v1
+      appVersion: 10.0.0.b50633
+      created: "2025-10-11T17:23:53.989199115-07:00"
+      dependencies:
+        - condition: redis.enabled
+          name: redis
+          repository: https://charts.bitnami.com/bitnami
+          version: ^16.12.1
+        - condition: postgresql.enabled
+          name: postgresql
+          repository: https://charts.bitnami.com/bitnami
+          version: ^11.6.2
+      description:
+        Redash is an open source tool built for teams to query, visualize
+        and collaborate.
+      digest: 0f4cecbb49c9379473312c908d8b9bb6ef8b3c2dae333b2f4faa264cf9542966 # pragma: allowlist secret
+      home: https://redash.io/
+      icon: https://redash.io/assets/images/elements/redash-logo.svg
+      keywords:
+        - redash
+        - analytics
+        - visualization
+      maintainers:
+        - email: owen.barton@civicactions.com
+          name: Owen Barton
+      name: redash
+      sources:
+        - https://github.com/getredash/redash
+      urls:
+        - https://charts.mrsharky.com/redash-3.0.0.tgz
+      version: 3.0.0
+  termix:
+    - apiVersion: v2
+      appVersion: 0.1.0
+      created: "2025-10-11T17:23:54.003088079-07:00"
+      dependencies:
+        - name: common
+          repository: https://bjw-s-labs.github.io/helm-charts/
+          version: 4.3.0
+      description: Termix
+      digest: c9ad9f2dcf846785fe33fceaf596c17b9fe0d4222e052eeb1b48b612807254df # pragma: allowlist secret
+      home: https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/termix
+      kubeVersion: ">=1.24.0-0"
+      maintainers:
+        - email: julien.pierret@gmail.com
+          name: julien-pierret
+      name: termix
+      sources:
+        - https://github.com/LukeGus/Termix?tab=readme-ov-file
+        - https://bjw-s-labs.github.io/helm-charts/
+      type: application
+      urls:
+        - https://charts.mrsharky.com/termix-0.1.0.tgz
+      version: 0.1.0
   ubooquity:
     - apiVersion: v2
       appVersion: version-2.1.2
-      created: "2022-10-01T18:14:11.399031077-07:00"
+      created: "2025-10-11T17:23:54.004313038-07:00"
       dependencies:
         - name: common
           repository: https://library-charts.k8s-at-home.com
@@ -151,4 +291,4 @@ entries:
       urls:
         - https://charts.mrsharky.com/ubooquity-0.1.0.tgz
       version: 0.1.0
-generated: "2022-10-01T18:14:11.373367184-07:00"
+generated: "2025-10-11T17:23:53.975079681-07:00"

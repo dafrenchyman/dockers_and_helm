@@ -59,4 +59,4 @@ service:
         port: 38008
         protocol: UDP
         targetPort: 38008
-    externalTrafficPolicy: Local
+    # externalTrafficPolicy: Local
