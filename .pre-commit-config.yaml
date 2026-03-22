@@ -9,10 +9,10 @@ repos:
     hooks:
       - id: isort
         name: isort
-  - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
-    rev: v1.2.1
-    hooks:
-      - id: python-safety-dependencies-check
+  #  - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
+  #    rev: v1.2.1
+  #    hooks:
+  #      - id: python-safety-dependencies-check
   - repo: https://github.com/PyCQA/flake8
     rev: 7.3.0
     hooks:

@@ -1,0 +1,198 @@
+# values.yaml — ComfyUI with baked ComfyUI-Manager and ComfyUI-Sentinel
+# This chart is built on the bjw-s "common" library chart.
+# Ref docs: https://github.com/bjw-s-labs/helm-charts/tree/main/charts/library/common
+
+################################################################################
+# Image settings
+################################################################################
+global: {}
+
+image:
+  # -- ComfyUI image repository.
+  repository: ghcr.io/dafrenchyman/comfyui
+  # -- ComfyUI image tag. `latest` tracks the latest main build.
+  tag: latest
+  # -- Image pull policy for the ComfyUI container.
+  pullPolicy: IfNotPresent
+
+################################################################################
+# Runtime settings
+################################################################################
+comfyui:
+  # -- The UID that should own writable mounted paths inside the container.
+  uid: "1000"
+  # -- The GID that should own writable mounted paths inside the container.
+  gid: "1000"
+  # -- Timezone passed through to the container.
+  timezone: "America/Los_Angeles"
+  # -- Listen address passed to ComfyUI.
+  host: "0.0.0.0"
+  # -- Main ComfyUI web port exposed by the container.
+  port: 8188
+  # -- Additional arguments appended to `python main.py`.
+  extraArgs: ""
+  # -- Replica count for the main deployment. Keep this at 1 unless you know the
+  # storage and runtime behavior works for your workload.
+  replicas: 1
+
+################################################################################
+# Sentinel configuration
+################################################################################
+sentinel:
+  # -- Existing Secret name to use for the Sentinel signing secret. When empty,
+  # the chart creates and manages a Secret for the release.
+  existingSecret: ""
+  # -- Secret name used when the chart manages the Sentinel signing secret.
+  # Ignored when `existingSecret` is set.
+  secretName: "comfyui-sentinel-secret"  # pragma: allowlist secret
+  # -- Secret key name containing the Sentinel signing secret.
+  secretKeyKey: "SECRET_KEY"  # pragma: allowlist secret
+  # -- Optional fixed signing secret value. Leave empty to auto-generate one on
+  # first install and preserve it across upgrades.
+  generatedSecretKey: ""
+  # -- Whether ComfyUI-Manager should be admin-only under Sentinel.
+  managerAdminOnly: true
+  # -- Whether Sentinel should isolate generated outputs per user.
+  separateUsers: true
+
+################################################################################
+# Resource requests and limits
+################################################################################
+resources:
+  # -- GPU-enabled AI workloads can be memory hungry. Adjust CPU, memory, and
+  # GPU requests to match your node capacity and desired scheduling guarantees.
+  requests:
+    cpu: 500m
+    memory: 4Gi
+  limits:
+    memory: 12Gi
+
+################################################################################
+# Service: expose the main ComfyUI web UI/API
+################################################################################
+service:
+  main:
+    enabled: true
+    controller: main
+    type: ClusterIP
+    ports:
+      http:
+        port: 8188
+        targetPort: web
+        protocol: TCP
+
+################################################################################
+# Ingress: optional HTTP(S) entrypoint to the ComfyUI UI/API
+################################################################################
+ingress:
+  main:
+    enabled: false
+    className: nginx
+    annotations: {}
+    hosts:
+      - host: comfyui.nixoskubemini.home.arpa
+        paths:
+          - path: /
+            pathType: Prefix
+            service:
+              identifier: main
+              port: http
+    tls: []
+
+################################################################################
+# Persistence: use the same paths as the container and compose examples
+################################################################################
+persistence:
+  # -- Models downloaded or installed by the user. This is usually the largest
+  # and most important persistent path to keep.
+  models:
+    enabled: true
+    type: hostPath
+    hostPath: /mnt/local/kube/data/comfyui/models
+    hostPathType: DirectoryOrCreate
+    advancedMounts:
+      main:
+        app:
+          - path: /opt/comfyui/models
+            readOnly: false
+
+  # -- Files uploaded to ComfyUI as inputs.
+  input:
+    enabled: true
+    type: hostPath
+    hostPath: /mnt/local/kube/data/comfyui/input
+    hostPathType: DirectoryOrCreate
+    advancedMounts:
+      main:
+        app:
+          - path: /opt/comfyui/input
+            readOnly: false
+
+  # -- Generated ComfyUI outputs.
+  output:
+    enabled: true
+    type: hostPath
+    hostPath: /mnt/local/kube/data/comfyui/output
+    hostPathType: DirectoryOrCreate
+    advancedMounts:
+      main:
+        app:
+          - path: /opt/comfyui/output
+            readOnly: false
+
+  # -- Mutable custom nodes installed by ComfyUI-Manager or added manually.
+  customNodes:
+    enabled: true
+    type: hostPath
+    hostPath: /mnt/local/kube/data/comfyui/custom_nodes
+    hostPathType: DirectoryOrCreate
+    advancedMounts:
+      main:
+        app:
+          - path: /opt/comfyui/custom_nodes
+            readOnly: false
+
+  # -- ComfyUI-Sentinel state, including users, lists, and log output.
+  sentinelState:
+    enabled: true
+    type: hostPath
+    hostPath: /mnt/local/kube/data/comfyui/sentinel
+    hostPathType: DirectoryOrCreate
+    advancedMounts:
+      main:
+        app:
+          - path: /opt/comfyui/state/sentinel
+            readOnly: false
+
+  # -- ComfyUI user directory. Keep this persistent if you want user state to
+  # survive Pod recreation.
+  user:
+    enabled: true
+    type: hostPath
+    hostPath: /mnt/local/kube/data/comfyui/user
+    hostPathType: DirectoryOrCreate
+    advancedMounts:
+      main:
+        app:
+          - path: /opt/comfyui/user
+            readOnly: false
+
+################################################################################
+# Advanced bjw-s common settings
+################################################################################
+# -- Optional node selector overrides.
+nodeSelector: {}
+
+# -- Optional toleration overrides.
+tolerations: []
+
+# -- Optional affinity overrides.
+affinity: {}
+
+# -- Optional default pod options override. The chart injects an fsGroup by
+# default based on `comfyui.gid`, but advanced users can override it here.
+defaultPodOptions: {}
+
+# -- Optional controller override. When left empty, the chart generates the
+# main controller from the documented settings above.
+controllers: {}

@@ -1,0 +1,22 @@
+services:
+  comfyui:
+    image: ghcr.io/dafrenchyman/comfyui:latest
+    container_name: comfyui
+    restart: unless-stopped
+    ports:
+      - "8188:8188"
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      COMFYUI_PORT: "8188"
+      SECRET_KEY: "replace-me-with-a-stable-secret" # pragma: allowlist secret
+      SENTINEL_MANAGER_ADMIN_ONLY: "true"
+      SENTINEL_SEPARATE_USERS: "true"
+    volumes:
+      - ./data/models:/opt/comfyui/models
+      - ./data/input:/opt/comfyui/input
+      - ./data/output:/opt/comfyui/output
+      - ./data/custom_nodes:/opt/comfyui/custom_nodes
+      - ./data/sentinel:/opt/comfyui/state/sentinel
+      - ./data/user:/opt/comfyui/user
+    gpus: all

@@ -153,3 +153,4 @@ static
 # Project related ignores (place project related ignores below here)
 /charts/*/charts
 /charts/*.tgz
+/containers/comfyui/docker-compose.yml
