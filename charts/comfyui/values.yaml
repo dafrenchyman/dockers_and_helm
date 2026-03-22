@@ -11,7 +11,7 @@ image:
   # -- ComfyUI image repository.
   repository: ghcr.io/dafrenchyman/comfyui
   # -- ComfyUI image tag. `latest` tracks the latest main build.
-  tag: latest
+  tag: sha-58cf41b
   # -- Image pull policy for the ComfyUI container.
   pullPolicy: IfNotPresent
 
@@ -141,7 +141,7 @@ persistence:
             readOnly: false
 
   # -- Mutable custom nodes installed by ComfyUI-Manager or added manually.
-  customNodes:
+  custom-nodes:
     enabled: true
     type: hostPath
     hostPath: /mnt/local/kube/data/comfyui/custom_nodes
@@ -153,7 +153,7 @@ persistence:
             readOnly: false
 
   # -- ComfyUI-Sentinel state, including users, lists, and log output.
-  sentinelState:
+  sentinel-state:
     enabled: true
     type: hostPath
     hostPath: /mnt/local/kube/data/comfyui/sentinel

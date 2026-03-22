@@ -1,6 +1,6 @@
 # comfyui
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.18.0](https://img.shields.io/badge/AppVersion-v0.18.0-informational?style=flat-square)
+![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.18.0](https://img.shields.io/badge/AppVersion-v0.18.0-informational?style=flat-square)
 
 ComfyUI with baked ComfyUI-Manager and ComfyUI-Sentinel
 
@@ -9,6 +9,8 @@ ComfyUI with baked ComfyUI-Manager and ComfyUI-Sentinel
 ## Additional Information
 
 Chart uses the awesome common library from [bjw-s-labs](https://bjw-s-labs.github.io/helm-charts/)
+
+ComfyUI-Sentinel's `separate_users` support is only partial. It helps with input/temp paths, queue history, and filename prefix handling, but it does not provide full asset isolation in a shared ComfyUI instance.
 
 ## Installing Chart from repo
 
@@ -84,7 +86,7 @@ Kubernetes: `>=1.24.0-0`
 | global | object | `{}` |  |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for the ComfyUI container. |
 | image.repository | string | `"ghcr.io/dafrenchyman/comfyui"` | ComfyUI image repository. |
-| image.tag | string | `"latest"` | ComfyUI image tag. `latest` tracks the latest main build. |
+| image.tag | string | `"sha-58cf41b"` | ComfyUI image tag. `latest` tracks the latest main build. |
 | ingress.main.annotations | object | `{}` |  |
 | ingress.main.className | string | `"nginx"` |  |
 | ingress.main.enabled | bool | `false` |  |
@@ -95,11 +97,11 @@ Kubernetes: `>=1.24.0-0`
 | ingress.main.hosts[0].paths[0].service.port | string | `"http"` |  |
 | ingress.main.tls | list | `[]` |  |
 | nodeSelector | object | `{}` | Optional node selector overrides. |
-| persistence.customNodes | object | `{"advancedMounts":{"main":{"app":[{"path":"/opt/comfyui/custom_nodes","readOnly":false}]}},"enabled":true,"hostPath":"/mnt/local/kube/data/comfyui/custom_nodes","hostPathType":"DirectoryOrCreate","type":"hostPath"}` | Mutable custom nodes installed by ComfyUI-Manager or added manually. |
+| persistence.custom-nodes | object | `{"advancedMounts":{"main":{"app":[{"path":"/opt/comfyui/custom_nodes","readOnly":false}]}},"enabled":true,"hostPath":"/mnt/local/kube/data/comfyui/custom_nodes","hostPathType":"DirectoryOrCreate","type":"hostPath"}` | Mutable custom nodes installed by ComfyUI-Manager or added manually. |
 | persistence.input | object | `{"advancedMounts":{"main":{"app":[{"path":"/opt/comfyui/input","readOnly":false}]}},"enabled":true,"hostPath":"/mnt/local/kube/data/comfyui/input","hostPathType":"DirectoryOrCreate","type":"hostPath"}` | Files uploaded to ComfyUI as inputs. |
 | persistence.models | object | `{"advancedMounts":{"main":{"app":[{"path":"/opt/comfyui/models","readOnly":false}]}},"enabled":true,"hostPath":"/mnt/local/kube/data/comfyui/models","hostPathType":"DirectoryOrCreate","type":"hostPath"}` | Models downloaded or installed by the user. This is usually the largest and most important persistent path to keep. |
 | persistence.output | object | `{"advancedMounts":{"main":{"app":[{"path":"/opt/comfyui/output","readOnly":false}]}},"enabled":true,"hostPath":"/mnt/local/kube/data/comfyui/output","hostPathType":"DirectoryOrCreate","type":"hostPath"}` | Generated ComfyUI outputs. |
-| persistence.sentinelState | object | `{"advancedMounts":{"main":{"app":[{"path":"/opt/comfyui/state/sentinel","readOnly":false}]}},"enabled":true,"hostPath":"/mnt/local/kube/data/comfyui/sentinel","hostPathType":"DirectoryOrCreate","type":"hostPath"}` | ComfyUI-Sentinel state, including users, lists, and log output. |
+| persistence.sentinel-state | object | `{"advancedMounts":{"main":{"app":[{"path":"/opt/comfyui/state/sentinel","readOnly":false}]}},"enabled":true,"hostPath":"/mnt/local/kube/data/comfyui/sentinel","hostPathType":"DirectoryOrCreate","type":"hostPath"}` | ComfyUI-Sentinel state, including users, lists, and log output. |
 | persistence.user | object | `{"advancedMounts":{"main":{"app":[{"path":"/opt/comfyui/user","readOnly":false}]}},"enabled":true,"hostPath":"/mnt/local/kube/data/comfyui/user","hostPathType":"DirectoryOrCreate","type":"hostPath"}` | ComfyUI user directory. Keep this persistent if you want user state to survive Pod recreation. |
 | resources.limits.memory | string | `"12Gi"` |  |
 | resources.requests | object | `{"cpu":"500m","memory":"4Gi"}` | GPU-enabled AI workloads can be memory hungry. Adjust CPU, memory, and GPU requests to match your node capacity and desired scheduling guarantees. |

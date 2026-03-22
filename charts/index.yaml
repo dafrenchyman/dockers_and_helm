@@ -3,7 +3,7 @@ entries:
   ambient-weather-prometheus-exporter:
     - apiVersion: v2
       appVersion: 1.0.0
-      created: "2025-10-11T17:23:53.976454707-07:00"
+      created: "2026-03-21T23:49:17.012864092-07:00"
       dependencies:
         - name: common
           repository: https://library-charts.k8s-at-home.com
@@ -27,7 +27,7 @@ entries:
   bluecherry:
     - apiVersion: v2
       appVersion: 1.0.0
-      created: "2025-10-11T17:23:53.977621656-07:00"
+      created: "2026-03-21T23:49:17.014132025-07:00"
       dependencies:
         - name: common
           repository: https://library-charts.k8s-at-home.com
@@ -50,10 +50,61 @@ entries:
       urls:
         - https://charts.mrsharky.com/bluecherry-0.1.0.tgz
       version: 0.1.0
+  comfyui:
+    - apiVersion: v2
+      appVersion: v0.18.0
+      created: "2026-03-21T23:49:17.020272681-07:00"
+      dependencies:
+        - name: common
+          repository: https://bjw-s-labs.github.io/helm-charts/
+          version: 4.3.0
+      description: ComfyUI with baked ComfyUI-Manager and ComfyUI-Sentinel
+      digest: 15208611a984cae9d390f0fd36b0551dbef3c33f1a85e7358026fa5dbc5a6449
+      home: https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/comfyui
+      kubeVersion: ">=1.24.0-0"
+      maintainers:
+        - email: julien.pierret@gmail.com
+          name: julien-pierret
+      name: comfyui
+      sources:
+        - https://github.com/comfyanonymous/ComfyUI
+        - https://github.com/Comfy-Org/ComfyUI-Manager
+        - https://github.com/LucipherDev/ComfyUI-Sentinel
+        - https://github.com/dafrenchyman/dockers_and_helm
+        - https://bjw-s-labs.github.io/helm-charts/
+      type: application
+      urls:
+        - https://charts.mrsharky.com/comfyui-0.1.2.tgz
+      version: 0.1.2
+    - apiVersion: v2
+      appVersion: v0.18.0
+      created: "2026-03-21T23:49:17.017442271-07:00"
+      dependencies:
+        - name: common
+          repository: https://bjw-s-labs.github.io/helm-charts/
+          version: 4.3.0
+      description: ComfyUI with baked ComfyUI-Manager and ComfyUI-Sentinel
+      digest: 98954cb372a5c65a1447ac54d89c31202ca6fd8c360ef234c5d235187009c023
+      home: https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/comfyui
+      kubeVersion: ">=1.24.0-0"
+      maintainers:
+        - email: julien.pierret@gmail.com
+          name: julien-pierret
+      name: comfyui
+      sources:
+        - https://github.com/comfyanonymous/ComfyUI
+        - https://github.com/Comfy-Org/ComfyUI-Manager
+        - https://github.com/LucipherDev/ComfyUI-Sentinel
+        - https://github.com/dafrenchyman/dockers_and_helm
+        - https://bjw-s-labs.github.io/helm-charts/
+      type: application
+      urls:
+        - https://charts.mrsharky.com/comfyui-0.1.0.tgz
+      version: 0.1.0
   dropbox:
     - apiVersion: v2
       appVersion: 1.10.0
-      created: "2025-10-11T17:23:53.978687872-07:00"
+      created: "2026-03-21T23:49:17.021391999-07:00"
       dependencies:
         - name: common
           repository: https://library-charts.k8s-at-home.com
@@ -77,7 +128,7 @@ entries:
   kavita:
     - apiVersion: v2
       appVersion: 0.4.8
-      created: "2025-10-11T17:23:53.979847366-07:00"
+      created: "2026-03-21T23:49:17.022850758-07:00"
       dependencies:
         - name: common
           repository: https://library-charts.k8s-at-home.com
@@ -101,13 +152,13 @@ entries:
   nzbget-exporter:
     - apiVersion: v2
       appVersion: 0.1.0
-      created: "2025-10-11T17:23:53.982668855-07:00"
+      created: "2026-03-21T23:49:17.025126788-07:00"
       dependencies:
         - name: common
           repository: https://bjw-s-labs.github.io/helm-charts/
           version: 4.3.0
       description: NZBget Prometheus Exporter
-      digest: d44ff5e805e05746b546052a697a28ebe3f834d6460c3fc5e29cf5fee77c1683 # pragma: allowlist secret
+      digest: d44ff5e805e05746b546052a697a28ebe3f834d6460c3fc5e29cf5fee77c1683
       home: https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/nzbget-exporter
       kubeVersion: ">=1.24.0-0"
       maintainers:
@@ -124,13 +175,13 @@ entries:
   ps3netsrv:
     - apiVersion: v2
       appVersion: 1.0.0
-      created: "2025-10-11T17:23:53.983805706-07:00"
+      created: "2026-03-21T23:49:17.026558082-07:00"
       dependencies:
         - name: common
           repository: https://library-charts.k8s-at-home.com
           version: 4.2.0
       description: ps3netsrv
-      digest: 26d165134e9bae0ceee39c9817494cb6c4a3cc24492e1c15b234e2a4e65c2c2f # pragma: allowlist secret
+      digest: 26d165134e9bae0ceee39c9817494cb6c4a3cc24492e1c15b234e2a4e65c2c2f
       home: https://github.com/aldostools/ps3netsrv-go
       keywords:
         - ps3netsrv
@@ -151,7 +202,7 @@ entries:
   redash:
     - apiVersion: v1
       appVersion: 10.0.0.b50633
-      created: "2025-10-11T17:23:54.000383012-07:00"
+      created: "2026-03-21T23:49:17.043153399-07:00"
       dependencies:
         - condition: redis.enabled
           name: redis
@@ -164,7 +215,7 @@ entries:
       description:
         Redash is an open source tool built for teams to query, visualize
         and collaborate.
-      digest: 223227a968b7924d56bdeb861680816998270d30b138080b2e2cd3f4ef7bd5a1 # pragma: allowlist secret
+      digest: 223227a968b7924d56bdeb861680816998270d30b138080b2e2cd3f4ef7bd5a1
       home: https://redash.io/
       icon: https://redash.io/assets/images/elements/redash-logo.svg
       keywords:
@@ -182,7 +233,7 @@ entries:
       version: 3.0.2
     - apiVersion: v1
       appVersion: 10.0.0.b50633
-      created: "2025-10-11T17:23:53.995771576-07:00"
+      created: "2026-03-21T23:49:17.039092537-07:00"
       dependencies:
         - condition: redis.enabled
           name: redis
@@ -195,7 +246,7 @@ entries:
       description:
         Redash is an open source tool built for teams to query, visualize
         and collaborate.
-      digest: efae0afd44334127240601cb23b7889e9cd3f8564da6a0e34871fce6bced1504 # pragma: allowlist secret
+      digest: efae0afd44334127240601cb23b7889e9cd3f8564da6a0e34871fce6bced1504
       home: https://redash.io/
       icon: https://redash.io/assets/images/elements/redash-logo.svg
       keywords:
@@ -213,7 +264,7 @@ entries:
       version: 3.0.1
     - apiVersion: v1
       appVersion: 10.0.0.b50633
-      created: "2025-10-11T17:23:53.989199115-07:00"
+      created: "2026-03-21T23:49:17.032508514-07:00"
       dependencies:
         - condition: redis.enabled
           name: redis
@@ -226,7 +277,7 @@ entries:
       description:
         Redash is an open source tool built for teams to query, visualize
         and collaborate.
-      digest: 0f4cecbb49c9379473312c908d8b9bb6ef8b3c2dae333b2f4faa264cf9542966 # pragma: allowlist secret
+      digest: 0f4cecbb49c9379473312c908d8b9bb6ef8b3c2dae333b2f4faa264cf9542966
       home: https://redash.io/
       icon: https://redash.io/assets/images/elements/redash-logo.svg
       keywords:
@@ -245,13 +296,13 @@ entries:
   termix:
     - apiVersion: v2
       appVersion: 0.1.0
-      created: "2025-10-11T17:23:54.003088079-07:00"
+      created: "2026-03-21T23:49:17.046055414-07:00"
       dependencies:
         - name: common
           repository: https://bjw-s-labs.github.io/helm-charts/
           version: 4.3.0
       description: Termix
-      digest: c9ad9f2dcf846785fe33fceaf596c17b9fe0d4222e052eeb1b48b612807254df # pragma: allowlist secret
+      digest: c9ad9f2dcf846785fe33fceaf596c17b9fe0d4222e052eeb1b48b612807254df
       home: https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/termix
       kubeVersion: ">=1.24.0-0"
       maintainers:
@@ -268,7 +319,7 @@ entries:
   ubooquity:
     - apiVersion: v2
       appVersion: version-2.1.2
-      created: "2025-10-11T17:23:54.004313038-07:00"
+      created: "2026-03-21T23:49:17.047151949-07:00"
       dependencies:
         - name: common
           repository: https://library-charts.k8s-at-home.com
@@ -291,4 +342,4 @@ entries:
       urls:
         - https://charts.mrsharky.com/ubooquity-0.1.0.tgz
       version: 0.1.0
-generated: "2025-10-11T17:23:53.975079681-07:00"
+generated: "2026-03-21T23:49:17.011411626-07:00"

@@ -55,3 +55,4 @@ At startup, the container copies the baked-in `ComfyUI-Manager` and `ComfyUI-Sen
 - This image targets NVIDIA GPU usage.
 - Models are intentionally not baked into the image.
 - Runtime-installed models and custom nodes are mutable state and should be mounted on persistent storage.
+- ComfyUI-Sentinel's `separate_users` support is only partial. It helps with input/temp paths, queue history, and filename prefix handling, but it does not provide full asset isolation in a shared ComfyUI instance.

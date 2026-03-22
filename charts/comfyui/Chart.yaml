@@ -18,5 +18,5 @@ sources:
   - https://github.com/dafrenchyman/dockers_and_helm
   - https://bjw-s-labs.github.io/helm-charts/
 icon:
-version: 0.1.0
+version: 0.1.2
 appVersion: v0.18.0
