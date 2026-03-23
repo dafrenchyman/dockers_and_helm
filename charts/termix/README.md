@@ -1,6 +1,6 @@
 # termix
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 Termix
 
@@ -68,34 +68,27 @@ Kubernetes: `>=1.24.0-0`
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| controllers.main.containers.app.env[0].name | string | `"TZ"` |  |
-| controllers.main.containers.app.env[0].value | string | `"America/Los_Angeles"` |  |
-| controllers.main.containers.app.env[1].name | string | `"PORT"` |  |
-| controllers.main.containers.app.env[1].value | string | `"8080"` |  |
-| controllers.main.containers.app.env[2].name | string | `"Enable_SSL"` |  |
-| controllers.main.containers.app.env[2].value | string | `"false"` |  |
-| controllers.main.containers.app.image.pullPolicy | string | `"IfNotPresent"` |  |
-| controllers.main.containers.app.image.repository | string | `"ghcr.io/lukegus/termix"` |  |
-| controllers.main.containers.app.image.tag | string | `"latest"` |  |
+| controllers.main.containers.app.env[0] | object | `{"name":"TZ","value":"America/Los_Angeles"}` | Timezone used inside the container. |
+| controllers.main.containers.app.env[1] | object | `{"name":"PORT","value":"8080"}` | Internal Termix web port. |
+| controllers.main.containers.app.env[2] | object | `{"name":"Enable_SSL","value":"false"}` | Whether the app should enable its own internal SSL handling. Leave this false when TLS is terminated at the ingress. |
+| controllers.main.containers.app.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for the Termix container. |
+| controllers.main.containers.app.image.repository | string | `"ghcr.io/lukegus/termix"` | Termix image repository. |
+| controllers.main.containers.app.image.tag | string | `"release-2.0.0"` | Pinned Termix image tag. |
 | controllers.main.containers.app.ports[0].containerPort | int | `8080` |  |
 | controllers.main.containers.app.ports[0].name | string | `"web"` |  |
 | controllers.main.containers.app.ports[0].protocol | string | `"TCP"` |  |
 | controllers.main.strategy | string | `"Recreate"` |  |
 | controllers.main.type | string | `"deployment"` |  |
-| ingress.main.annotations | object | `{}` |  |
-| ingress.main.className | string | `"nginx"` |  |
-| ingress.main.enabled | bool | `true` |  |
-| ingress.main.hosts[0].host | string | `"termix"` |  |
-| ingress.main.hosts[0].paths[0].path | string | `"/"` |  |
-| ingress.main.hosts[0].paths[0].pathType | string | `"Prefix"` |  |
-| ingress.main.hosts[0].paths[0].service.identifier | string | `"main"` |  |
-| ingress.main.hosts[0].paths[0].service.port | string | `"http"` |  |
-| ingress.main.tls | list | `[]` |  |
-| persistence.data.enabled | bool | `false` |  |
-| persistence.import.enabled | bool | `false` |  |
+| ingress.main.annotations | object | `{}` | Extra ingress annotations. |
+| ingress.main.className | string | `"nginx"` | Ingress class name used to publish the service. |
+| ingress.main.enabled | bool | `true` | Enable ingress for the Termix web UI. |
+| ingress.main.hosts[0] | object | `{"host":"termix","paths":[{"path":"/","pathType":"Prefix","service":{"identifier":"main","port":"http"}}]}` | Host rules for the Termix ingress. |
+| ingress.main.tls | list | `[]` | TLS configuration for the ingress. |
+| persistence.data | object | `{"enabled":false}` | Persistent application data. |
+| persistence.import | object | `{"enabled":false}` | Optional import or shared files location for Termix. |
 | service.main.controller | string | `"main"` |  |
-| service.main.enabled | bool | `true` |  |
-| service.main.ports.http.port | int | `8080` |  |
+| service.main.enabled | bool | `true` | Expose the Termix web interface inside the cluster. |
+| service.main.ports.http.port | int | `8080` | Service port for the Termix web UI. |
 | service.main.ports.http.protocol | string | `"TCP"` |  |
 | service.main.ports.http.targetPort | string | `"web"` |  |
 

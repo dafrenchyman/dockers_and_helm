@@ -1,53 +1,69 @@
-# values.yaml — nzbget-exporter chart
+# values.yaml — termix chart
 # This file is meant for the bjw-s "common" library chart.
 # Ref docs: https://github.com/bjw-s-labs/helm-charts/tree/main/charts/library/common
 
 controllers:
   main:
+    # Use a single Deployment for the Termix web application.
     type: deployment
+    # Recreate avoids briefly running two Pods at once against the same storage.
     strategy: Recreate
     containers:
       app:
         image:
+          # -- Termix image repository.
           repository: ghcr.io/lukegus/termix
-          tag: latest
+          # -- Pinned Termix image tag.
+          tag: release-2.0.0
+          # -- Image pull policy for the Termix container.
           pullPolicy: IfNotPresent
         env:
+          # -- Timezone used inside the container.
           - name: TZ
             value: "America/Los_Angeles"
+          # -- Internal Termix web port.
           - name: PORT
             value: "8080"
+          # -- Whether the app should enable its own internal SSL handling.
+          # Leave this false when TLS is terminated at the ingress.
           - name: Enable_SSL
             value: "false"
         ports:
+          # Expose the main HTTP port inside the Pod.
           - name: web
             containerPort: 8080
             protocol: TCP
 
 service:
   main:
+    # -- Expose the Termix web interface inside the cluster.
     enabled: true
     controller: main
     ports:
       http:
+        # -- Service port for the Termix web UI.
         port: 8080
         targetPort: web
         protocol: TCP
 
 persistence:
-  # Data goes here
+  # -- Persistent application data.
   data:
     enabled: false
-  # Imports go here
+  # -- Optional import or shared files location for Termix.
   import:
     enabled: false
 
 ingress:
   main:
+    # -- Enable ingress for the Termix web UI.
     enabled: true
+    # -- Ingress class name used to publish the service.
     className: nginx
+    # -- Extra ingress annotations.
     annotations: {}
     hosts:
+      # -- Host rules for the Termix ingress.
       - host: termix
         paths:
           - path: /
@@ -55,7 +71,7 @@ ingress:
             service:
               identifier: main
               port: http
-    # Add TLS if you have cert-manager (recommended)
+    # -- TLS configuration for the ingress.
     tls: []
     # Example:
     # tls:

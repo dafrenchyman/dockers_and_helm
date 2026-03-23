@@ -14,6 +14,6 @@ home: https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/termix
 sources:
   - https://github.com/LukeGus/Termix?tab=readme-ov-file
   - https://bjw-s-labs.github.io/helm-charts/
-icon:
-version: 0.1.0
-appVersion: 0.1.0
+icon: https://raw.githubusercontent.com/Termix-SSH/Termix/main/public/icon.svg
+version: 0.1.1
+appVersion: 2.0.0
