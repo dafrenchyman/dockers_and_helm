@@ -1,0 +1,15 @@
+---
+{{- include "bjw-s.common.loader.init" . }}
+
+{{- define "fooocus_extend.hardcodedValues" -}}
+{{- if not .Values.global.nameOverride }}
+global:
+  nameOverride: "{{ .Release.Name }}"
+{{- end }}
+{{- end -}}
+
+{{- $_ := mergeOverwrite .Values (include "fooocus_extend.hardcodedValues" . | fromYaml) -}}
+{{- $_ := mergeOverwrite .Values (((include "fooocus_extend.defaults.controller" .) | fromYaml) | default (dict)) -}}
+{{- $_ := mergeOverwrite .Values (((include "fooocus_extend.defaults.podOptions" .) | fromYaml) | default (dict)) -}}
+
+{{ include "bjw-s.common.loader.generate" . }}

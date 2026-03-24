@@ -1,0 +1,30 @@
+services:
+  fooocus-extend:
+    image: ghcr.io/dafrenchyman/fooocus_extend:latest
+    container_name: fooocus-extend
+    restart: unless-stopped
+    ports:
+      - "7865:7865"
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      CMDARGS: "--listen"
+      DATADIR: "/content/data"
+      config_path: "/content/data/state/config/config.txt"
+      config_example_path: "/content/data/state/config/config_modification_tutorial.txt"
+      path_checkpoints: "/content/data/models/checkpoints/"
+      path_loras: "/content/data/models/loras/"
+      path_embeddings: "/content/data/models/embeddings/"
+      path_vae_approx: "/content/data/models/vae_approx/"
+      path_upscale_models: "/content/data/models/upscale_models/"
+      path_inpaint: "/content/data/models/inpaint/"
+      path_controlnet: "/content/data/models/controlnet/"
+      path_clip_vision: "/content/data/models/clip_vision/"
+      path_fooocus_expansion: "/content/data/models/prompt_expansion/fooocus_expansion/"
+      path_outputs: "/content/app/outputs/"
+    volumes:
+      - ./data/models:/content/data/models
+      - ./data/outputs:/content/data/outputs
+      - ./data/state:/content/data/state
+    devices:
+      - "nvidia.com/gpu=all"

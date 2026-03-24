@@ -1,0 +1,202 @@
+[
+  {
+    "name": "plum-Neo-Cyberpunk",
+    "prompt": "Neo-Cyberpunk {prompt} . Sleek, high-tech, neon-infused, futuristic dystopia, intricate details, cybernetic enhancements",
+    "negative_prompt": "natural, rustic, vintage, low tech"
+  },
+  {
+    "name": "plum-Vintage Neon Poster",
+    "prompt": "Vintage Neon Poster {prompt} . Retro aesthetics, bold neon colors, 80s design, grainy texture, high contrast",
+    "negative_prompt": "modern, sleek, minimalist, monochrome"
+  },
+  {
+    "name": "plum-Surreal Fantasy Landscape",
+    "prompt": "Surreal Fantasy Landscape {prompt} . Dreamlike scenery, vibrant colors, fantastical elements, ethereal lighting",
+    "negative_prompt": "realistic, dull, lifeless, ordinary"
+  },
+  {
+    "name": "plum-Minimalist Geometric Art",
+    "prompt": "Minimalist Geometric Art {prompt} . Clean lines, simple shapes, bold colors, modern aesthetic, abstract forms",
+    "negative_prompt": "complex, detailed, ornate, cluttered"
+  },
+  {
+    "name": "plum-Retro-Futuristic Sci-Fi",
+    "prompt": "Retro-Futuristic Sci-Fi {prompt} . 60s space age style, vibrant colors, sleek spacecraft, optimistic future",
+    "negative_prompt": "contemporary, dull, dark, dystopian"
+  },
+  {
+    "name": "plum-Steampunk Fantasy Portrait",
+    "prompt": "Steampunk Fantasy Portrait {prompt} . Victorian attire, intricate gears, brass elements, detailed textures",
+    "negative_prompt": "modern, plain, simple, futuristic"
+  },
+  {
+    "name": "plum-Gothic Horror Scene",
+    "prompt": "Gothic Horror Scene {prompt} . Dark, eerie atmosphere, intricate gothic architecture, dramatic shadows",
+    "negative_prompt": "bright, cheerful, minimalistic, abstract"
+  },
+  {
+    "name": "plum-Neo-Impressionist Painting",
+    "prompt": "Neo-Impressionist Painting {prompt} . Bold brushstrokes, vibrant color palette, light and shadow play, modern twist",
+    "negative_prompt": "photorealistic, detailed, sharp, realistic"
+  },
+  {
+    "name": "plum-High-Tech Urban Jungle",
+    "prompt": "High-Tech Urban Jungle {prompt} . Futuristic cityscape, integrated nature, neon lights, lush greenery",
+    "negative_prompt": "desolate, barren, outdated, mundane"
+  },
+  {
+    "name": "plum-Cosmic Abstract Art",
+    "prompt": "Cosmic Abstract Art {prompt} . Swirling galaxies, vibrant nebulae, abstract cosmic forms, ethereal colors",
+    "negative_prompt": "realistic, dull, lifeless, ordinary"
+  },
+  {
+    "name": "plum-Bio-Mechanical Art",
+    "prompt": "Bio-Mechanical Art {prompt} . Fusion of organic and mechanical elements, intricate details, futuristic, highly detailed",
+    "negative_prompt": "natural, rustic, simplistic, traditional"
+  },
+  {
+    "name": "plum-Retro Comic Book",
+    "prompt": "Retro Comic Book {prompt} . Vintage comic style, bold outlines, halftone shading, vibrant colors, dynamic action",
+    "negative_prompt": "realistic, modern, photorealistic, muted colors"
+  },
+  {
+    "name": "plum-Mythical Creature Portrait",
+    "prompt": "Mythical Creature Portrait {prompt} . Fantastical, detailed textures, dramatic lighting, vibrant colors, magical",
+    "negative_prompt": "ordinary, dull, lifeless, mundane"
+  },
+  {
+    "name": "plum-Futuristic Neon Landscape",
+    "prompt": "Futuristic Neon Landscape {prompt} . High-tech, neon-lit environment, vibrant colors, futuristic cityscape, dynamic composition",
+    "negative_prompt": "natural, rural, dark, monochrome"
+  },
+  {
+    "name": "plum-Abstract Geometric Pattern",
+    "prompt": "Abstract Geometric Pattern {prompt} . Bold shapes, vibrant colors, symmetrical design, modern art, highly detailed",
+    "negative_prompt": "realistic, plain, simple, natural"
+  },
+  {
+    "name": "plum-Epic Fantasy Battle",
+    "prompt": "Epic Fantasy Battle {prompt} . Dramatic, intense action, vivid colors, detailed characters, magical elements",
+    "negative_prompt": "calm, peaceful, boring, static"
+  },
+  {
+    "name": "plum-Vintage Noir Film",
+    "prompt": "Vintage Noir Film {prompt} . Black and white, dramatic lighting, high contrast, 1940s style, mysterious atmosphere",
+    "negative_prompt": "colorful, bright, modern, cheerful"
+  },
+  {
+    "name": "plum-Cyberpunk Portrait",
+    "prompt": "Cyberpunk Portrait {prompt} . Neon lighting, futuristic fashion, detailed, high-tech, vibrant colors",
+    "negative_prompt": "ordinary, plain, dull, rustic"
+  },
+  {
+    "name": "plum-Whimsical Children's Illustration",
+    "prompt": "Whimsical Children's Illustration {prompt} . Bright colors, playful, cute characters, imaginative, storybook style",
+    "negative_prompt": "dark, scary, realistic, mature"
+  },
+  {
+    "name": "plum-Space Exploration Art",
+    "prompt": "Space Exploration Art {prompt} . Vast cosmos, vibrant galaxies, futuristic spacecraft, high detail, ethereal lighting",
+    "negative_prompt": "earthbound, ordinary, dull, simple"
+  },
+  {
+    "name": "plum-Detailed Body Face Skin",
+    "prompt": "Detailed {prompt} . Focus on intricate details, realistic textures, highly defined facial features, flawless skin, lifelike anatomy, high-resolution",
+    "negative_prompt": "blurred, low detail, pixelated, simplified, cartoonish, abstract"
+  },
+  {
+    "name": "plum-pony",
+    "prompt": "score_9, score_8_up, score_7_up, {prompt}",
+    "negative_prompt": "score_5_up, score_4_up, score_3_up, monochrome, censored"
+  },
+  {
+    "name": "plum-Detailed Face",
+    "prompt": "Detailed {prompt} . Focus on intricate facial details, realistic textures, highly defined facial features, lifelike skin, high-resolution",
+    "negative_prompt": "blurred, low detail, pixelated, simplified, cartoonish, abstract"
+  },
+  {
+    "name": "plum-Detailed Eyes",
+    "prompt": "Detailed {prompt} . Focus on intricate eye details, realistic iris patterns, highly defined pupils, lifelike eye anatomy, high-resolution",
+    "negative_prompt": "blurred, low detail, pixelated, simplified, cartoonish, abstract"
+  },
+  {
+    "name": "plum-Detailed Skin",
+    "prompt": "Detailed {prompt} . Focus on intricate skin details, realistic pores, highly defined textures, lifelike skin tones, high-resolution",
+    "negative_prompt": "blurred, low detail, pixelated, simplified, cartoonish, abstract"
+  },
+  {
+    "name": "plum-Detailed Hands",
+    "prompt": "Detailed {prompt} . Focus on intricate hand details, realistic finger textures, highly defined anatomy, lifelike skin, high-resolution",
+    "negative_prompt": "blurred, low detail, pixelated, simplified, cartoonish, abstract"
+  },
+  {
+    "name": "plum-Detailed Feet",
+    "prompt": "Detailed {prompt} . Focus on intricate foot details, realistic toe textures, highly defined anatomy, lifelike skin, high-resolution",
+    "negative_prompt": "blurred, low detail, pixelated, simplified, cartoonish, abstract"
+  },
+  {
+    "name": "plum-Detailed Hair",
+    "prompt": "Detailed {prompt} . Focus on intricate hair details, realistic strand textures, highly defined hair patterns, lifelike hair colors, high-resolution",
+    "negative_prompt": "blurred, low detail, pixelated, simplified, cartoonish, abstract"
+  },
+  {
+    "name": "plum-Detailed Body",
+    "prompt": "Detailed {prompt} . Focus on intricate body details, realistic muscle textures, highly defined anatomy, lifelike skin, high-resolution",
+    "negative_prompt": "blurred, low detail, pixelated, simplified, cartoonish, abstract"
+  },
+  {
+    "name": "plum-Detailed Torso",
+    "prompt": "Detailed {prompt} . Focus on intricate torso details, realistic chest and abdomen textures, highly defined anatomy, lifelike skin, high-resolution",
+    "negative_prompt": "blurred, low detail, pixelated, simplified, cartoonish, abstract"
+  },
+  {
+    "name": "plum-Detailed Legs",
+    "prompt": "Detailed {prompt} . Focus on intricate leg details, realistic muscle and skin textures, highly defined anatomy, lifelike skin, high-resolution",
+    "negative_prompt": "blurred, low detail, pixelated, simplified, cartoonish, abstract"
+  },
+  {
+    "name": "plum-Detailed Arms",
+    "prompt": "Detailed {prompt} . Focus on intricate arm details, realistic muscle and skin textures, highly defined anatomy, lifelike skin, high-resolution",
+    "negative_prompt": "blurred, low detail, pixelated, simplified, cartoonish, abstract"
+  },
+  {
+    "name": "plum-jugger x",
+    "prompt": "Skin Textures, High Resolution, High-Resolution Image, Cinematic, {prompt}",
+    "negative_prompt": "blurred, low detail, pixelated, simplified, cartoonish, abstract"
+  },
+  {
+    "name": "plum-Photorealistic",
+    "prompt": "Photorealistic {prompt} . Ultra-high detail, lifelike textures, realistic lighting, high-resolution",
+    "negative_prompt": "cartoonish, abstract, low detail, blurry"
+  },
+  {
+    "name": "plum-Cinematic Lighting",
+    "prompt": "Cinematic Lighting {prompt} . Dramatic lighting, high contrast, detailed shadows, high-resolution",
+    "negative_prompt": "flat lighting, low contrast, dull"
+  },
+  {
+    "name": "plum-Masterpiece",
+    "prompt": "Masterpiece {prompt} . Exquisite detail, flawless composition, high-resolution, stunning quality",
+    "negative_prompt": "mediocre, low quality, dull, lifeless"
+  },
+  {
+    "name": "plum-Hyper Detailed",
+    "prompt": "Hyper Detailed {prompt} . Extreme detail, intricate textures, high-resolution, sharp focus",
+    "negative_prompt": "blurred, low detail, pixelated, simplistic"
+  },
+  {
+    "name": "plum-Professional Photography",
+    "prompt": "Professional Photography {prompt} . Studio lighting, sharp focus, high-resolution, lifelike colors",
+    "negative_prompt": "amateur, blurry, low detail, dull colors"
+  },
+  {
+    "name": "plum-Negative Only",
+    "prompt": "",
+    "negative_prompt": "ugly, deformed, noisy, blurry, low contrast, color, old, mature, (worst quality, low quality, thumbnail:1.4), signature, artist name, web address, cropped, jpeg artifacts, watermark, username, collage, grid"
+  },
+  {
+    "name": "plum-Realistic Fur",
+    "prompt": "High Realistic Fur {prompt} . Intricate fur details, lifelike textures, high-resolution, realistic lighting, individual strands",
+    "negative_prompt": "blurred, low detail, pixelated, simplified, cartoonish, abstract"
+  }
+]

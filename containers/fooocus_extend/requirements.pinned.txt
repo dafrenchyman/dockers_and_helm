@@ -1,0 +1,5 @@
+# Keep the web stack off the newest FastAPI/Starlette releases, which are too
+# new for Gradio 3.41.2, while still preserving the app's required
+# `pydantic==2.11.5`.
+fastapi==0.103.2
+starlette==0.27.0

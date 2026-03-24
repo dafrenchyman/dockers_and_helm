@@ -1,0 +1,56 @@
+name: Build and Publish Fooocus_extend Image
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/fooocus-extend-image.yml"
+      - "containers/fooocus_extend/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract image metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/fooocus_extend
+          tags: |
+            type=raw,value=latest
+            type=sha,format=short,prefix=sha-
+          labels: |
+            org.opencontainers.image.title=Fooocus_extend
+            org.opencontainers.image.description=Pinned Fooocus_extend image with seeded presets, styles, and wildcards
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+
+      - name: Build and publish image
+        uses: docker/build-push-action@v6
+        with:
+          context: containers/fooocus_extend
+          file: containers/fooocus_extend/Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

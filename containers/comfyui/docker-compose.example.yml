@@ -19,4 +19,5 @@ services:
       - ./data/custom_nodes:/opt/comfyui/custom_nodes
       - ./data/sentinel:/opt/comfyui/state/sentinel
       - ./data/user:/opt/comfyui/user
-    gpus: all
+    devices:
+      - "nvidia.com/gpu=all"

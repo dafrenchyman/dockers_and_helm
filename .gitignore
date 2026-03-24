@@ -152,8 +152,8 @@ static
 
 # Project related ignores (place project related ignores below here)
 /charts/*/charts
-/charts/*.tgz
 /charts/.packages/
-/charts/index.yml
 /containers/comfyui/docker-compose.yml
 /containers/comfyui/local-data/
+/containers/fooocus_extend/docker-compose.yml
+/containers/fooocus_extend/local-data/

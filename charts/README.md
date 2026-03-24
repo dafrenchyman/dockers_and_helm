@@ -59,7 +59,6 @@ ensure_repo library-charts-k8s-at-home https://library-charts.k8s-at-home.com
 ensure_repo bjw-s https://bjw-s-labs.github.io/helm-charts/
 helm repo update
 
-rm -rf "$OUTPUT_DIR"
 mkdir -p "$OUTPUT_DIR"
 
 find "$CHARTS_DIR" -mindepth 1 -maxdepth 1 -type d | while read -r chart_dir; do
@@ -76,7 +75,5 @@ find "$CHARTS_DIR" -mindepth 1 -maxdepth 1 -type d | while read -r chart_dir; do
   )
 done
 
-
-cp "$OUTPUT_DIR"/*.tgz "$CHARTS_DIR"/
-helm repo index "$CHARTS_DIR" --url https://charts.mrsharky.com/
+helm repo index "$OUTPUT_DIR" --url https://charts.mrsharky.com/
 ```

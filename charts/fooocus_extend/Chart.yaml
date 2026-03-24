@@ -1,0 +1,20 @@
+apiVersion: v2
+name: fooocus_extend
+description: Fooocus_extend with repo-managed seeded presets, styles, and wildcards
+type: application
+kubeVersion: ">=1.24.0-0"
+maintainers:
+  - name: julien-pierret
+    email: julien.pierret@gmail.com
+dependencies:
+  - name: common
+    repository: https://bjw-s-labs.github.io/helm-charts/
+    version: 4.3.0
+home: https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/fooocus_extend
+sources:
+  - https://github.com/shaitanzx/Fooocus_extend
+  - https://github.com/dafrenchyman/dockers_and_helm
+  - https://bjw-s-labs.github.io/helm-charts/
+icon: https://www.gradio.app/favicon.png
+version: 0.1.0
+appVersion: 67c346a
