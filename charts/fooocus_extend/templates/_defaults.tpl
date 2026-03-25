@@ -72,32 +72,32 @@ controllers:
               httpGet:
                 path: /
                 port: web
-              initialDelaySeconds: 10
-              periodSeconds: 10
-              timeoutSeconds: 5
-              failureThreshold: 30
-          readiness:
-            enabled: true
-            custom: true
-            spec:
-              httpGet:
-                path: /
-                port: web
-              initialDelaySeconds: 20
+              initialDelaySeconds: 30
               periodSeconds: 15
-              timeoutSeconds: 5
-              failureThreshold: 6
-          liveness:
-            enabled: true
+              timeoutSeconds: 10
+              failureThreshold: 60
+          readiness:
+            enabled: false
             custom: true
             spec:
               httpGet:
                 path: /
                 port: web
-              initialDelaySeconds: 60
+              initialDelaySeconds: 120
               periodSeconds: 30
-              timeoutSeconds: 5
-              failureThreshold: 5
+              timeoutSeconds: 10
+              failureThreshold: 20
+          liveness:
+            enabled: false
+            custom: true
+            spec:
+              httpGet:
+                path: /
+                port: web
+              initialDelaySeconds: 300
+              periodSeconds: 60
+              timeoutSeconds: 10
+              failureThreshold: 10
 {{- end -}}
 {{- end -}}
 

@@ -1,6 +1,6 @@
 # fooocus_extend
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 67c346a](https://img.shields.io/badge/AppVersion-67c346a-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 67c346a](https://img.shields.io/badge/AppVersion-67c346a-informational?style=flat-square)
 
 Fooocus_extend with repo-managed seeded presets, styles, and wildcards
 
@@ -105,8 +105,7 @@ Kubernetes: `>=1.24.0-0`
 | podSecurityContext.fsGroup | int | `1000` | Apply a filesystem group so mounted volumes are writable by the runtime group even when the storage backend preserves ownership metadata. |
 | podSecurityContext.fsGroupChangePolicy | string | `"OnRootMismatch"` | Only recurse ownership changes when Kubernetes detects a root mismatch. This reduces avoidable startup churn on large persistent volumes. |
 | resources.limits."nvidia.com/gpu" | int | `1` |  |
-| resources.limits.memory | string | `"12Gi"` |  |
-| resources.requests | object | `{"cpu":"500m","memory":"4Gi"}` | GPU-enabled AI workloads can be memory hungry. Adjust CPU, memory, and GPU requests to match your node capacity and scheduling requirements. The default GPU limit assumes an NVIDIA device plugin is installed and that this workload should reserve one GPU. |
+| resources.requests | object | `{"cpu":"500m","memory":"4Gi"}` | GPU-enabled AI workloads can be memory hungry. Adjust CPU, memory, and GPU requests to match your node capacity and scheduling requirements. The default GPU limit assumes an NVIDIA device plugin is installed and that this workload should reserve one GPU. No memory limit is set by default because model loads and swaps can temporarily spike usage. |
 | service.main.controller | string | `"main"` |  |
 | service.main.enabled | bool | `true` |  |
 | service.main.ports.http.port | int | `7865` |  |

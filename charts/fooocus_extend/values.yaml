@@ -50,12 +50,12 @@ resources:
   # -- GPU-enabled AI workloads can be memory hungry. Adjust CPU, memory, and
   # GPU requests to match your node capacity and scheduling requirements.
   # The default GPU limit assumes an NVIDIA device plugin is installed and that
-  # this workload should reserve one GPU.
+  # this workload should reserve one GPU. No memory limit is set by default
+  # because model loads and swaps can temporarily spike usage.
   requests:
     cpu: 500m
     memory: 4Gi
   limits:
-    memory: 12Gi
     nvidia.com/gpu: 1
 
 ################################################################################

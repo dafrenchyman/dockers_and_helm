@@ -16,5 +16,5 @@ sources:
   - https://github.com/dafrenchyman/dockers_and_helm
   - https://bjw-s-labs.github.io/helm-charts/
 icon: https://www.gradio.app/favicon.png
-version: 0.1.0
+version: 0.1.1
 appVersion: 67c346a
