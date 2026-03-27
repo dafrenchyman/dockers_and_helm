@@ -1,0 +1,31 @@
+services:
+  ace-step-1-5:
+    image: ghcr.io/dafrenchyman/ace-step-1-5:latest
+    container_name: ace-step-1-5
+    restart: unless-stopped
+    ports:
+      - "7860:7860"
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      PORT: "7860"
+      SERVER_NAME: "0.0.0.0"
+      LANGUAGE: "en"
+      ACESTEP_CONFIG_PATH: "acestep-v15-turbo"
+      ACESTEP_LM_MODEL_PATH: "acestep-5Hz-lm-1.7B"
+      ACESTEP_DEVICE: "cuda"
+      ACESTEP_LM_BACKEND: "pt"
+      ACESTEP_INIT_LLM: "auto"
+      ACESTEP_DOWNLOAD_SOURCE: "auto"
+      ACESTEP_NO_INIT: "true"
+      MODELS_DIR: "/opt/ace-step/data/models"
+      INPUTS_DIR: "/opt/ace-step/data/inputs"
+      OUTPUTS_DIR: "/opt/ace-step/data/outputs"
+      RUNTIME_STATE_DIR: "/opt/ace-step/data/state"
+    volumes:
+      - ./data/models:/opt/ace-step/data/models
+      - ./data/inputs:/opt/ace-step/data/inputs
+      - ./data/outputs:/opt/ace-step/data/outputs
+      - ./data/state:/opt/ace-step/data/state
+    devices:
+      - "nvidia.com/gpu=all"
