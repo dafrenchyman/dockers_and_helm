@@ -1,0 +1,223 @@
+# values.yaml — ACE-Step 1.5 Gradio web UI with four-tier persistent storage
+# This chart is built on the bjw-s "common" library chart.
+# Ref docs: https://github.com/bjw-s-labs/helm-charts/tree/main/charts/library/common
+
+################################################################################
+# Image settings
+################################################################################
+global: {}
+
+image:
+  # -- ACE-Step 1.5 image repository.
+  repository: ghcr.io/dafrenchyman/ace-step-1-5
+  # -- ACE-Step 1.5 image tag. `latest` tracks the latest main build.
+  tag: latest
+  # -- Image pull policy for the ACE-Step 1.5 container. Leave this at
+  # `IfNotPresent` for stable nodes, or switch to `Always` if you rely on
+  # mutable tags such as `latest`.
+  pullPolicy: IfNotPresent
+
+################################################################################
+# Runtime settings
+################################################################################
+aceStep:
+  # -- Optional timezone passed through to the container for log timestamps and
+  # any runtime behavior that depends on local time.
+  timezone: "America/Los_Angeles"
+  # -- The UID that should own writable mounted paths inside the container.
+  # This matters most for hostPath-style storage and other bind-mounted
+  # Kubernetes volumes where you care about host-visible file ownership.
+  uid: "1000"
+  # -- The GID that should own writable mounted paths inside the container.
+  # The chart also exposes pod-level security context controls, which are the
+  # primary ownership mechanism for Kubernetes.
+  gid: "1000"
+  # -- Listen address passed to the Gradio web UI. The default `0.0.0.0`
+  # matches the container's remote-access behavior and is required for ingress
+  # or Service-based access to work correctly.
+  host: "0.0.0.0"
+  # -- Main ACE-Step 1.5 web port exposed by the container.
+  port: 7860
+  # -- UI language passed to ACE-Step. Supported values depend on upstream and
+  # currently include `en`, `zh`, `he`, and `ja`.
+  language: "en"
+  # -- Default DiT model selection passed as `ACESTEP_CONFIG_PATH`.
+  configPath: "acestep-v15-turbo"
+  # -- Default language-model selection passed as `ACESTEP_LM_MODEL_PATH`.
+  # This controls the optional 5Hz LM chosen when ACE-Step decides to load it.
+  lmModelPath: "acestep-5Hz-lm-1.7B"
+  # -- Device selection forwarded to ACE-Step. Use `cuda` for the intended
+  # NVIDIA-backed deployment profile, or override only if you know the
+  # upstream runtime supports your hardware combination.
+  device: "cuda"
+  # -- Language-model backend forwarded to ACE-Step. The default `pt` favors
+  # compatibility on consumer GPUs over the more aggressive `vllm` path.
+  lmBackend: "pt"
+  # -- LLM initialization mode. The default `auto` lets ACE-Step choose the LM
+  # initialization behavior based on the detected GPU configuration.
+  initLlm: "auto"
+  # -- Preferred model download source. Supported values are `auto`,
+  # `huggingface`, and `modelscope`.
+  downloadSource: "auto"
+  # -- Skip eager model initialization during startup so the web UI can come up
+  # faster. The default `true` follows ACE-Step's newer on-demand
+  # initialization flow so models are loaded when needed by the user workflow.
+  noInit: true
+  # -- Additional arguments appended to the ACE-Step Gradio launch command.
+  # This is the escape hatch for upstream options not modeled directly by the
+  # chart. Leave it empty for the documented default behavior.
+  extraArgs: ""
+  # -- Replica count for the main deployment. Keep this at 1 unless you know
+  # the storage and runtime behavior works for your workload. The writable
+  # storage model in this chart is designed around a single-writer deployment
+  # by default.
+  replicas: 1
+
+################################################################################
+# Resource requests and limits
+################################################################################
+resources:
+  # -- GPU-enabled music-generation workloads can be memory hungry. Adjust CPU,
+  # memory, and GPU requests to match your node capacity and scheduling
+  # requirements. The default GPU limit assumes an NVIDIA device plugin is
+  # installed and that this workload should reserve one GPU. No memory limit is
+  # set by default because model initialization and generation can spike usage.
+  requests:
+    cpu: 500m
+    memory: 4Gi
+  limits:
+    nvidia.com/gpu: 1
+
+################################################################################
+# Service: expose the main ACE-Step 1.5 web UI
+################################################################################
+service:
+  main:
+    enabled: true
+    controller: main
+    type: ClusterIP
+    ports:
+      http:
+        port: 7860
+        targetPort: web
+        protocol: TCP
+
+################################################################################
+# Ingress: optional HTTP(S) entrypoint to the ACE-Step 1.5 web UI
+################################################################################
+ingress:
+  main:
+    enabled: false
+    className: nginx
+    annotations: {}
+    hosts:
+      - host: ace-step-1-5.nixoskubemini.home.arpa
+        paths:
+          - path: /
+            pathType: Prefix
+            service:
+              identifier: main
+              port: http
+    tls: []
+
+################################################################################
+# Persistence: separate model storage from inputs, outputs, and smaller state
+################################################################################
+persistence:
+  # -- Models, checkpoints, and other large downloadable ACE-Step assets. This
+  # path is usually best placed on fast storage such as local NVMe. The
+  # container redirects the primary ACE-Step model root into this path.
+  models:
+    enabled: true
+    type: hostPath
+    hostPath: /mnt/local/kube/data/ace-step-1-5/models
+    hostPathType: DirectoryOrCreate
+    advancedMounts:
+      main:
+        app:
+          - path: /opt/ace-step/data/models
+            readOnly: false
+
+  # -- User-provided reference material and other uploaded input assets. Keep
+  # this separate from `outputs` if you want incoming files to live on a
+  # different storage class, or if you want a clearer operational boundary
+  # between user uploads and generated content.
+  inputs:
+    enabled: true
+    type: hostPath
+    hostPath: /mnt/local/kube/data/ace-step-1-5/inputs
+    hostPathType: DirectoryOrCreate
+    advancedMounts:
+      main:
+        app:
+          - path: /opt/ace-step/data/inputs
+            readOnly: false
+
+  # -- Generated songs and related output artifacts. This path can usually use
+  # slower capacity-oriented storage than the model assets. Keep this separate
+  # from `models` if you want to place generated content on larger but slower
+  # storage.
+  outputs:
+    enabled: true
+    type: hostPath
+    hostPath: /mnt/local/kube/data/ace-step-1-5/outputs
+    hostPathType: DirectoryOrCreate
+    advancedMounts:
+      main:
+        app:
+          - path: /opt/ace-step/data/outputs
+            readOnly: false
+
+  # -- Smaller runtime state including config, caches, logs, and temporary
+  # files. The container redirects model and downloader cache roots into this
+  # volume so runtime state stays inside documented persistent storage instead
+  # of leaking into implicit home-directory caches.
+  runtime-state:
+    enabled: true
+    type: hostPath
+    hostPath: /mnt/local/kube/data/ace-step-1-5/state
+    hostPathType: DirectoryOrCreate
+    advancedMounts:
+      main:
+        app:
+          - path: /opt/ace-step/data/state
+            readOnly: false
+
+################################################################################
+# Kubernetes security context: primary ownership controls for Helm deployments
+################################################################################
+podSecurityContext:
+  # -- Apply a filesystem group so mounted volumes are writable by the runtime
+  # group even when the storage backend preserves ownership metadata.
+  fsGroup: 1000
+  # -- Only recurse ownership changes when Kubernetes detects a root mismatch.
+  # This reduces avoidable startup churn on large persistent volumes.
+  fsGroupChangePolicy: OnRootMismatch
+
+# -- Optional container-level security context overrides. Leave empty unless
+# you need to set capabilities, readOnlyRootFilesystem, seccompProfile, or
+# similar low-level container settings.
+containerSecurityContext: {}
+
+################################################################################
+# Advanced bjw-s common settings
+################################################################################
+# -- Optional node selector overrides.
+nodeSelector: {}
+
+# -- Optional toleration overrides.
+tolerations: []
+
+# -- Optional affinity overrides.
+affinity: {}
+
+# -- Optional default pod options override. When left empty, the chart creates
+# pod defaults from the documented values above. Advanced users can override
+# this if they need to bypass the chart's default fsGroup behavior entirely.
+defaultPodOptions: {}
+
+# -- Optional controller override. When left empty, the chart generates the
+# main controller from the documented settings above. Most users should leave
+# this empty and configure the workload through the higher-level values in this
+# file so the generated README remains accurate.
+controllers: {}

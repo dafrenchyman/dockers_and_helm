@@ -1,0 +1,15 @@
+---
+{{- include "bjw-s.common.loader.init" . }}
+
+{{- define "ace_step_1_5.hardcodedValues" -}}
+{{- if not .Values.global.nameOverride }}
+global:
+  nameOverride: "{{ .Release.Name }}"
+{{- end }}
+{{- end -}}
+
+{{- $_ := mergeOverwrite .Values (include "ace_step_1_5.hardcodedValues" . | fromYaml) -}}
+{{- $_ := mergeOverwrite .Values (((include "ace_step_1_5.defaults.controller" .) | fromYaml) | default (dict)) -}}
+{{- $_ := mergeOverwrite .Values (((include "ace_step_1_5.defaults.podOptions" .) | fromYaml) | default (dict)) -}}
+
+{{ include "bjw-s.common.loader.generate" . }}

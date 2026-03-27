@@ -155,5 +155,7 @@ static
 /charts/.packages/
 /containers/comfyui/docker-compose.yml
 /containers/comfyui/local-data/
+/containers/ace-step-1-5/docker-compose.yml
+/containers/ace-step-1-5/local-data/
 /containers/fooocus_extend/docker-compose.yml
 /containers/fooocus_extend/local-data/

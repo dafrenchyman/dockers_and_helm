@@ -1,0 +1,20 @@
+apiVersion: v2
+name: ace-step-1-5
+description: ACE-Step 1.5 Gradio web UI with four-tier persistent storage
+type: application
+kubeVersion: ">=1.24.0-0"
+maintainers:
+  - name: julien-pierret
+    email: julien.pierret@gmail.com
+dependencies:
+  - name: common
+    repository: https://bjw-s-labs.github.io/helm-charts/
+    version: 4.3.0
+home: https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/ace-step-1-5
+sources:
+  - https://github.com/ace-step/ACE-Step-1.5
+  - https://github.com/dafrenchyman/dockers_and_helm
+  - https://bjw-s-labs.github.io/helm-charts/
+icon: https://www.gradio.app/favicon.png
+version: 0.1.1
+appVersion: eddb621
