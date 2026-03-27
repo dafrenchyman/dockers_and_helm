@@ -11,7 +11,7 @@ image:
   # -- ACE-Step 1.5 image repository.
   repository: ghcr.io/dafrenchyman/ace-step-1-5
   # -- ACE-Step 1.5 image tag. `latest` tracks the latest main build.
-  tag: latest
+  tag: sha-4b883d5
   # -- Image pull policy for the ACE-Step 1.5 container. Leave this at
   # `IfNotPresent` for stable nodes, or switch to `Always` if you rely on
   # mutable tags such as `latest`.

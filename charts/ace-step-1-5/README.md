@@ -98,7 +98,7 @@ Kubernetes: `>=1.24.0-0`
 | global | object | `{}` |  |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for the ACE-Step 1.5 container. Leave this at `IfNotPresent` for stable nodes, or switch to `Always` if you rely on mutable tags such as `latest`. |
 | image.repository | string | `"ghcr.io/dafrenchyman/ace-step-1-5"` | ACE-Step 1.5 image repository. |
-| image.tag | string | `"latest"` | ACE-Step 1.5 image tag. `latest` tracks the latest main build. |
+| image.tag | string | `"sha-4b883d5"` | ACE-Step 1.5 image tag. `latest` tracks the latest main build. |
 | ingress.main.annotations | object | `{}` |  |
 | ingress.main.className | string | `"nginx"` |  |
 | ingress.main.enabled | bool | `false` |  |
