@@ -1,0 +1,96 @@
+# values.yaml — Cooklang chart
+# This file is meant for the bjw-s "common" library chart.
+# Ref docs: https://github.com/bjw-s-labs/helm-charts/tree/main/charts/library/common
+
+################################################################################
+# Workload: single Cooklang server deployment
+################################################################################
+controllers:
+  main:
+    # -- Deploy Cooklang as a Deployment rather than a StatefulSet or CronJob.
+    type: deployment
+    # -- Keep a single replica unless you have shared storage and have validated
+    # the image behavior for your environment.
+    replicas: 1
+    # -- Recreate avoids two Pods briefly sharing the same writable recipes
+    # volume during upgrades.
+    strategy: Recreate
+    containers:
+      app:
+        image:
+          # -- Upstream Cooklang server image repository.
+          repository: ghcr.io/cooklang/cookcli
+          # -- Upstream image tag pinned to the latest verified GitHub release
+          # for CookCLI as of March 22, 2026.
+          tag: 0.26.0
+          # -- Image pull policy for the main Cooklang container.
+          pullPolicy: IfNotPresent
+        ports:
+          - name: web
+            # -- Main HTTP port exposed by the Cooklang server.
+            containerPort: 9080
+            protocol: TCP
+
+################################################################################
+# Service: internal access to the Cooklang web UI
+################################################################################
+service:
+  main:
+    # -- Create a Service for the main Cooklang web application.
+    enabled: true
+    # -- Route traffic to the `main` controller.
+    controller: main
+    # -- Use ClusterIP by default; enable ingress or another exposure method
+    # separately if you want browser access outside the cluster.
+    type: ClusterIP
+    ports:
+      http:
+        # -- Service port for the Cooklang web UI.
+        port: 9080
+        # -- Target the named `web` port on the container.
+        targetPort: web
+        protocol: TCP
+
+################################################################################
+# Persistence: mount your recipe collection into the container
+################################################################################
+persistence:
+  recipes:
+    # -- Enable a volume for your `.cook` recipe files. Without this, the server
+    # starts but has no recipe collection to serve.
+    enabled: false
+    # -- Default to a PVC-managed volume. Advanced users can switch this to
+    # `existingClaim`, `hostPath`, or another bjw-s-supported type.
+    type: persistentVolumeClaim
+    # -- Access mode for the generated PVC when `type=persistentVolumeClaim`.
+    accessMode: ReadWriteOnce
+    # -- Requested PVC size for the recipes volume. Plain text recipes are
+    # small, so the default can stay modest.
+    size: 1Gi
+    # -- Mount path expected by the upstream Cooklang image.
+    mountPath: /recipes
+
+################################################################################
+# Ingress: optional HTTP(S) entrypoint for browsers
+################################################################################
+ingress:
+  main:
+    # -- Enable an ingress if you want Cooklang reachable via a hostname.
+    enabled: false
+    # -- IngressClass to use when ingress is enabled.
+    className: nginx
+    # -- Optional ingress annotations for cert-manager, auth, rewrites, etc.
+    annotations: {}
+    hosts:
+      - host: cooklang
+        paths:
+          - path: /
+            # -- Prefix routing works well for the Cooklang UI.
+            pathType: Prefix
+            service:
+              # -- Send ingress traffic to the main Service.
+              identifier: main
+              # -- Use the HTTP service port defined above.
+              port: http
+    # -- Optional TLS entries for HTTPS-enabled ingress setups.
+    tls: []

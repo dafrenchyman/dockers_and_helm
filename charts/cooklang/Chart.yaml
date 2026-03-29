@@ -1,0 +1,20 @@
+apiVersion: v2
+name: cooklang
+description: Cooklang recipe server powered by CookCLI
+type: application
+kubeVersion: ">=1.24.0-0"
+maintainers:
+  - name: julien-pierret
+    email: julien.pierret@gmail.com
+dependencies:
+  - name: common
+    repository: https://bjw-s-labs.github.io/helm-charts/
+    version: 4.3.0
+home: https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/cooklang
+sources:
+  - https://cooklang.org/blog/21-self-hosting-recipes-with-docker/
+  - https://github.com/cooklang/cookcli
+  - https://bjw-s-labs.github.io/helm-charts/
+icon: https://cooklang.org/favicon.png
+version: 0.1.0
+appVersion: 0.26.0
