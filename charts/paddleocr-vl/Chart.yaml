@@ -1,0 +1,19 @@
+apiVersion: v2
+name: paddleocr-vl
+description: PaddleOCR-VL high-performance OCR/document parsing API
+type: application
+kubeVersion: ">=1.24.0-0"
+home: https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/paddleocr-vl
+sources:
+  - https://github.com/dafrenchyman/dockers_and_helm
+  - https://github.com/PaddlePaddle/PaddleOCR
+  - https://bjw-s-labs.github.io/helm-charts/
+maintainers:
+  - name: julien-pierret
+    email: julien.pierret@gmail.com
+version: 0.1.0
+appVersion: "PaddleOCR-VL-1.6"
+dependencies:
+  - name: common
+    repository: https://bjw-s-labs.github.io/helm-charts/
+    version: 4.3.0

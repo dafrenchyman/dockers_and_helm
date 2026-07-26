@@ -1,0 +1,151 @@
+{{ template "chart.header" . }}
+
+{{ template "chart.badgesSection" . }}
+
+{{ template "chart.deprecationWarning" . }}
+
+{{ template "chart.description" . }}
+
+{{ template "chart.homepageLine" . }}
+
+## Additional Information
+
+Chart uses the awesome common library from [bjw-s-labs](https://bjw-s-labs.github.io/helm-charts/).
+
+This chart deploys the official PaddleOCR-VL high-performance serving backend topology:
+
+```text
+Client -> FastAPI Gateway -> Triton Server -> vLLM Server
+```
+
+The default API and pipeline images are published by this repository's GHCR workflow. Users do not need to build local images to install the chart. The VLM server uses the official NVIDIA GPU image, digest-pinned in `values.yaml`.
+
+The official gateway exposes:
+
+- `GET /health`
+- `GET /health/ready`
+- `POST /layout-parsing`
+- `POST /restructure-pages`
+
+First startup downloads PaddleX/PaddleOCR/vLLM model files to `/cache` when `persistence.pipeline-cache.enabled=true` and `persistence.vlm-cache.enabled=true`. Subsequent starts reuse `${PADDLE_PDX_CACHE_HOME}/official_models` plus Hugging Face, ModelScope, and vLLM cache directories under `/cache`.
+
+### NixOS / NVIDIA GPU notes
+
+For NixOS/NVIDIA Docker environments, keep `NVIDIA_VISIBLE_DEVICES=0`, `NVIDIA_DRIVER_CAPABILITIES=compute,utility`, and `TRITON_LIBCUDA_PATH=/usr/lib/x86_64-linux-gnu` on the GPU containers unless the cluster runtime already provides a working CUDA library path.
+
+Observed failure mode from the PaddleOCR-VL research: GPU containers could run `nvidia-smi`, and `libcuda.so.1` existed at `/usr/lib/x86_64-linux-gnu/libcuda.so.1`, but vLLM/Triton failed with `AssertionError: libcuda.so cannot found!` because `ldconfig`/the dynamic linker path did not make that library discoverable. Pointing `TRITON_LIBCUDA_PATH` directly at `/usr/lib/x86_64-linux-gnu` fixes the CUDA discovery path.
+
+Use this override as the NixOS baseline:
+
+```yaml
+gpu:
+  nvidiaVisibleDevices: "0"
+  driverCapabilities: compute,utility
+  tritonLibcudaPath: /usr/lib/x86_64-linux-gnu
+# Optional only for clusters that require an NVIDIA RuntimeClass:
+# runtimeClassName: nvidia
+```
+
+Omit `runtimeClassName` when the cluster only needs the NVIDIA device plugin and `nvidia.com/gpu` limits. Set `runtimeClassName: nvidia` only when your cluster runtime requires it.
+
+The default chart requests `nvidia.com/gpu: 1` on both `pipeline` and `vlm` because the standard Kubernetes NVIDIA device-plugin path injects GPU devices per container that requests the resource. This reserves two GPUs by default. Single-GPU operators can intentionally configure NVIDIA device-plugin time slicing/oversubscription, expose the same device with runtime-specific settings, or override one controller's GPU limit only after confirming `nvidia-smi` and the serving process work in both GPU containers.
+
+### vLLM sleep mode
+
+vLLM online sleep mode can release most GPU memory, but it requires development endpoints. This chart keeps sleep mode disabled by default and never exposes the VLM Service through ingress.
+
+Relevant values:
+
+```yaml
+vlm:
+  sleepMode:
+    enabled: true
+    devMode: true
+  backendConfig:
+    gpu-memory-utilization: null
+    max-num-seqs: null
+  extraArgs: []
+```
+
+When `vlm.sleepMode.enabled=true`, the chart sets `VLLM_SERVER_DEV_MODE=1` when `vlm.sleepMode.devMode=true`, generates `/config/vllm_config.yaml` with `enable-sleep-mode: true`, and passes it to `paddleocr genai_server --backend_config`.
+
+Internal-only sleep/wake commands:
+
+```bash
+curl -X POST 'http://<vlm-service>:8080/sleep?level=1'
+curl -X POST 'http://<vlm-service>:8080/wake_up'
+curl -sS 'http://<vlm-service>:8080/is_sleeping'
+```
+
+Do not expose VLM development endpoints through ingress.
+
+### API ingress
+
+The API gateway uses a normal ClusterIP Service behind Ingress. The chart does not use NodePort or LoadBalancer by default.
+
+```yaml
+ingress:
+  api:
+    enabled: true
+    className: nginx
+    hosts:
+      - host: paddleocr-vl.example.local
+        paths:
+          - path: /
+            pathType: Prefix
+            service:
+              identifier: api
+              port: http
+    tls: []
+```
+
+The backend is intentionally unauthenticated by default. For production, keep the Service as `ClusterIP` and put authentication at the ingress, API gateway, or caller-service layer before traffic reaches PaddleOCR. Examples: nginx ingress auth annotations, oauth2-proxy, Authelia, Traefik forward-auth, or an application service that calls PaddleOCR internally. This chart does not add API keys to the official gateway because upstream `gateway/app.py` has no auth path, and adding one would require owning a forked API contract.
+
+## Installing Chart from repo
+
+To install the chart with the release name `my-release`:
+
+```console
+$ helm repo add mrsharky http://charts.mrsharky.com
+$ helm install my-release mrsharky/{{ template "chart.name" . }}
+```
+
+## Installing Chart from source
+
+Get the dependencies
+
+```bash
+helm dependency update
+```
+
+Verify everything is correct
+
+```bash
+helm lint .
+```
+
+Install/Upgrade
+
+```bash
+helm upgrade --install {{ template "chart.name" . }} . -f values.yaml --wait --timeout 30m --atomic
+```
+
+Uninstall
+
+```bash
+helm delete {{ template "chart.name" . }}
+```
+
+## Packaging
+```bash
+helm package {{ template "chart.name" . }}
+helm repo index . --url https://charts.mrsharky.com
+```
+
+{{ template "chart.sourcesSection" . }}
+
+{{ template "chart.requirementsSection" . }}
+
+{{ template "chart.valuesSection" . }}
+
+{{ template "helm-docs.versionFooter" . }}

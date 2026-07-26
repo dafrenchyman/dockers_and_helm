@@ -1,0 +1,19 @@
+{{- if include "paddleocr_vl.vlmBackendConfigEnabled" . }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-vlm-backend-config" (include "paddleocr_vl.fullname" .) | quote }}
+  labels:
+    app.kubernetes.io/name: {{ include "paddleocr_vl.fullname" . | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+data:
+  vllm_config.yaml: |
+{{- range $key, $value := .Values.vlm.backendConfig }}
+{{- if ne $value nil }}
+    {{ $key }}: {{ $value | toJson }}
+{{- end }}
+{{- end }}
+{{- if .Values.vlm.sleepMode.enabled }}
+    enable-sleep-mode: true
+{{- end }}
+{{- end }}

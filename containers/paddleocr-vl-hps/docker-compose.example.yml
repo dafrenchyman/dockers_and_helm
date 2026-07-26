@@ -1,0 +1,89 @@
+services:
+  api:
+    image: ghcr.io/dafrenchyman/paddleocr-vl-gateway:latest
+    container_name: paddleocr-vl-api
+    restart: unless-stopped
+    depends_on:
+      - pipeline
+      - vlm
+    ports:
+      - "8080:8080"
+    environment:
+      HPS_TRITON_URL: "pipeline:8001"
+      HPS_VLM_URL: "http://vlm:8080"
+      HPS_MAX_CONCURRENT_INFERENCE_REQUESTS: "16"
+      HPS_MAX_CONCURRENT_NON_INFERENCE_REQUESTS: "64"
+      HPS_INFERENCE_TIMEOUT: "600"
+      HPS_HEALTH_CHECK_TIMEOUT: "5"
+      HPS_LOG_LEVEL: "INFO"
+      HPS_FILTER_HEALTH_ACCESS_LOG: "true"
+      HPS_UVICORN_WORKERS: "4"
+
+  pipeline:
+    image: ghcr.io/dafrenchyman/paddleocr-vl-pipeline:latest
+    container_name: paddleocr-vl-pipeline
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+    environment:
+      HPS_VLM_URL: "http://vlm:8080"
+      HPS_DEVICE_TYPE: "gpu"
+      HPS_DEVICE_ID: "0"
+      NVIDIA_VISIBLE_DEVICES: "0"
+      NVIDIA_DRIVER_CAPABILITIES: "compute,utility"
+      TRITON_LIBCUDA_PATH: "/usr/lib/x86_64-linux-gnu"
+      PADDLE_PDX_CACHE_HOME: "/cache/paddlex"
+      PADDLE_PDX_MODEL_SOURCE: "huggingface"
+      PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK: "False"
+      HF_HOME: "/cache/huggingface"
+      HF_HUB_CACHE: "/cache/huggingface/hub"
+      HUGGINGFACE_HUB_CACHE: "/cache/huggingface/hub"
+      MODELSCOPE_CACHE: "/cache/modelscope"
+      VLLM_CACHE_ROOT: "/cache/vllm"
+      VLLM_ASSETS_CACHE: "/cache/vllm/assets"
+      VLLM_MEDIA_CACHE: "/cache/vllm/media"
+      XDG_CACHE_HOME: "/cache/xdg"
+    volumes:
+      - ./local-data/pipeline-cache:/cache
+      - ./pipeline_config.example.yaml:/opt/paddleocr-vl/server/pipeline_config.yaml:ro
+    devices:
+      - "nvidia.com/gpu=all"
+
+  vlm:
+    image: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddleocr-genai-vllm-server:latest-nvidia-gpu@sha256:5713fd30ab76094b7b6a20d95fd8e26fa9dc452bcc90ccb16f1fb056bd2a0f4d
+    container_name: paddleocr-vl-vlm
+    restart: unless-stopped
+    command:
+      - paddleocr
+      - genai_server
+      - --model_name
+      - PaddleOCR-VL-1.6-0.9B
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8080"
+      - --backend
+      - vllm
+    ports:
+      - "8081:8080"
+    environment:
+      HPS_DEVICE_ID: "0"
+      NVIDIA_VISIBLE_DEVICES: "0"
+      NVIDIA_DRIVER_CAPABILITIES: "compute,utility"
+      TRITON_LIBCUDA_PATH: "/usr/lib/x86_64-linux-gnu"
+      PADDLE_PDX_CACHE_HOME: "/cache/paddlex"
+      PADDLE_PDX_MODEL_SOURCE: "huggingface"
+      PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK: "False"
+      HF_HOME: "/cache/huggingface"
+      HF_HUB_CACHE: "/cache/huggingface/hub"
+      HUGGINGFACE_HUB_CACHE: "/cache/huggingface/hub"
+      MODELSCOPE_CACHE: "/cache/modelscope"
+      VLLM_CACHE_ROOT: "/cache/vllm"
+      VLLM_ASSETS_CACHE: "/cache/vllm/assets"
+      VLLM_MEDIA_CACHE: "/cache/vllm/media"
+      XDG_CACHE_HOME: "/cache/xdg"
+    volumes:
+      - ./local-data/vlm-cache:/cache
+    devices:
+      - "nvidia.com/gpu=all"

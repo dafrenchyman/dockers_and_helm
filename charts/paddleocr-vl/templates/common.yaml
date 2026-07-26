@@ -1,0 +1,38 @@
+---
+{{- include "bjw-s.common.loader.init" . }}
+
+{{- define "paddleocr_vl.hardcodedValues" -}}
+{{- if not .Values.global.nameOverride }}
+global:
+  nameOverride: "{{ .Release.Name }}"
+{{- end }}
+persistence:
+  pipeline-config:
+    enabled: true
+    type: configMap
+    name: {{ printf "%s-pipeline-config" (include "paddleocr_vl.fullname" .) | quote }}
+    advancedMounts:
+      pipeline:
+        app:
+          - path: /opt/paddleocr-vl/server/pipeline_config.yaml
+            subPath: pipeline_config.yaml
+            readOnly: true
+{{- if include "paddleocr_vl.vlmBackendConfigEnabled" . }}
+  vlm-backend-config:
+    enabled: true
+    type: configMap
+    name: {{ printf "%s-vlm-backend-config" (include "paddleocr_vl.fullname" .) | quote }}
+    advancedMounts:
+      vlm:
+        app:
+          - path: /config/vllm_config.yaml
+            subPath: vllm_config.yaml
+            readOnly: true
+{{- end }}
+{{- end -}}
+
+{{- $_ := mergeOverwrite .Values (include "paddleocr_vl.hardcodedValues" . | fromYaml) -}}
+{{- $_ := mergeOverwrite .Values (((include "paddleocr_vl.defaults.controllers" .) | fromYaml) | default (dict)) -}}
+{{- $_ := mergeOverwrite .Values (((include "paddleocr_vl.defaults.podOptions" .) | fromYaml) | default (dict)) -}}
+
+{{ include "bjw-s.common.loader.generate" . }}

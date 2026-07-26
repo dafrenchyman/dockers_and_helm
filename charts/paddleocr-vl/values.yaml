@@ -1,0 +1,268 @@
+# values.yaml — PaddleOCR-VL high-performance serving API
+# This chart is built on the bjw-s "common" library chart.
+# Ref docs: https://github.com/bjw-s-labs/helm-charts/tree/main/charts/library/common
+
+global: {}
+
+################################################################################
+# Image settings
+################################################################################
+image:
+  api:
+    # -- Repo-published PaddleOCR-VL FastAPI gateway image repository.
+    repository: ghcr.io/dafrenchyman/paddleocr-vl-gateway
+    # -- Start with `latest` only until the first GHCR workflow publish creates sha-* tags; then replace this default with the first verified `sha-...` tag.
+    tag: latest
+    # -- Image pull policy for the API gateway container.
+    pullPolicy: IfNotPresent
+  pipeline:
+    # -- Repo-published PaddleOCR-VL Triton pipeline image repository.
+    repository: ghcr.io/dafrenchyman/paddleocr-vl-pipeline
+    # -- Start with `latest` only until the first GHCR workflow publish creates sha-* tags; then replace this default with the first verified `sha-...` tag.
+    tag: latest
+    # -- Image pull policy for the pipeline container.
+    pullPolicy: IfNotPresent
+  vlm:
+    # -- Official PaddleOCR generative vLLM server image repository.
+    repository: ccr-2vdh3abv-pub.cnc.bj.baidubce.com/paddlepaddle/paddleocr-genai-vllm-server
+    # -- Digest-pinned form of upstream `latest-nvidia-gpu`; this SHA is for the NVIDIA GPU image. Inspected on 2026-07-26 with `docker buildx imagetools inspect`.
+    tag: latest-nvidia-gpu@sha256:5713fd30ab76094b7b6a20d95fd8e26fa9dc452bcc90ccb16f1fb056bd2a0f4d
+    # -- Image pull policy for the VLM server container.
+    pullPolicy: IfNotPresent
+
+################################################################################
+# PaddleOCR-VL runtime settings
+################################################################################
+paddleocr:
+  # -- PaddleOCR-VL pipeline release. Known official HPS examples: `PaddleOCR-VL-1.6`, `PaddleOCR-VL-1.5`, `PaddleOCR-VL`.
+  pipelineName: PaddleOCR-VL-1.6
+  # -- PaddleX HPS SDK/base-image major.minor version. Official HPS default for PaddleOCR-VL-1.6 is `3.6`.
+  paddlexVersion: "3.6"
+  # -- SDK directory name matching `paddlex_hps_${pipelineName}_sdk`; examples: `paddlex_hps_PaddleOCR-VL-1.6_sdk`, `paddlex_hps_PaddleOCR-VL-1.5_sdk`, `paddlex_hps_PaddleOCR-VL_sdk`.
+  sdkDir: paddlex_hps_PaddleOCR-VL-1.6_sdk
+  # -- VLM service model. Known official example for the 1.6 pipeline: `PaddleOCR-VL-1.6-0.9B`; 1.5 uses `PaddleOCR-VL-1.5-0.9B`; v1 uses `PaddleOCR-VL-0.9B`.
+  vlmName: PaddleOCR-VL-1.6-0.9B
+  # -- PaddleX model source. Source-verified aliases: `huggingface`, `aistudio`, `modelscope`, `bos`.
+  modelSource: huggingface
+  # -- Set true to export `PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK=True` and skip PaddleX source reachability HEAD checks.
+  disableModelSourceCheck: false
+  replicas:
+    # -- Number of API gateway replicas.
+    api: 1
+    # -- Number of Triton pipeline replicas.
+    pipeline: 1
+    # -- Number of VLM server replicas.
+    vlm: 1
+
+################################################################################
+# Gateway serving settings
+################################################################################
+serving:
+  # -- `HPS_MAX_CONCURRENT_INFERENCE_REQUESTS` for gateway inference calls.
+  maxConcurrentInferenceRequests: 16
+  # -- `HPS_MAX_CONCURRENT_NON_INFERENCE_REQUESTS` for gateway non-inference calls.
+  maxConcurrentNonInferenceRequests: 64
+  # -- `HPS_INFERENCE_TIMEOUT` in seconds.
+  inferenceTimeoutSeconds: 600
+  # -- `HPS_HEALTH_CHECK_TIMEOUT` in seconds.
+  healthCheckTimeoutSeconds: 5
+  # -- `HPS_LOG_LEVEL`.
+  logLevel: INFO
+  # -- `HPS_FILTER_HEALTH_ACCESS_LOG`; hides health access logs in the official gateway.
+  filterHealthAccessLog: true
+  # -- `HPS_UVICORN_WORKERS` for the FastAPI gateway.
+  uvicornWorkers: 4
+
+################################################################################
+# GPU / CUDA library discovery settings
+################################################################################
+gpu:
+  # -- `HPS_DEVICE_ID` passed to GPU containers.
+  deviceId: "0"
+  # -- `NVIDIA_VISIBLE_DEVICES` passed to GPU containers.
+  nvidiaVisibleDevices: "0"
+  # -- `NVIDIA_DRIVER_CAPABILITIES` passed to GPU containers.
+  driverCapabilities: compute,utility
+  # -- `TRITON_LIBCUDA_PATH` for vLLM/Triton CUDA discovery. In the supplied NixOS/Docker GPU environment, `nvidia-smi` worked and `/usr/lib/x86_64-linux-gnu/libcuda.so.1` existed, but `ldconfig`/the dynamic linker did not expose `libcuda.so`; pointing directly at this directory fixed `AssertionError: libcuda.so cannot found!`.
+  tritonLibcudaPath: /usr/lib/x86_64-linux-gnu
+
+# -- Optional RuntimeClass for GPU Pods. Set to `nvidia` only on clusters that require an NVIDIA RuntimeClass; otherwise leave empty and rely on the NVIDIA device plugin plus `nvidia.com/gpu` limits.
+runtimeClassName: ""
+
+################################################################################
+# VLM backend settings
+################################################################################
+vlm:
+  # -- Backend passed to `paddleocr genai_server --backend`; official documented options are `vllm`, `sglang`, and `fastdeploy`. This chart defaults to `vllm`.
+  backend: vllm
+  # -- Optional local model directory passed as `--model_dir` when non-empty.
+  modelDir: ""
+  # -- Optional generated backend config mounted at `/config/vllm_config.yaml` and passed with `--backend_config` when any key is set.
+  backendConfig:
+    # -- Optional vLLM GPU memory utilization; leave null to omit from generated backend config.
+    gpu-memory-utilization: null
+    # -- Optional vLLM max sequence count; leave null to omit from generated backend config.
+    max-num-seqs: null
+  # -- Extra args appended to `paddleocr genai_server` for upstream options not modeled by this chart.
+  extraArgs: []
+  sleepMode:
+    # -- Enables vLLM development endpoints plus sleep mode. These endpoints must stay internal.
+    enabled: false
+    # -- Sets `VLLM_SERVER_DEV_MODE=1`; required for vLLM online sleep/wake endpoints.
+    devMode: true
+
+################################################################################
+# Resources
+################################################################################
+resources:
+  # -- API gateway resources. No GPU env, runtimeClass, or GPU resource is applied to this controller by default.
+  api: {}
+  pipeline:
+    # -- Triton pipeline resource requests.
+    requests:
+      cpu: 1000m
+      memory: 8Gi
+    # -- Triton pipeline limits. This GPU limit is intentionally present by default so the NVIDIA device plugin injects GPU devices.
+    limits:
+      nvidia.com/gpu: 1
+  vlm:
+    # -- VLM server resource requests.
+    requests:
+      cpu: 1000m
+      memory: 16Gi
+    # -- VLM server limits. This GPU limit is intentionally present by default so the NVIDIA device plugin injects GPU devices.
+    limits:
+      nvidia.com/gpu: 1
+
+################################################################################
+# Service and ingress
+################################################################################
+service:
+  api:
+    # -- Create a ClusterIP Service for the FastAPI gateway.
+    enabled: true
+    controller: api
+    type: ClusterIP
+    ports:
+      http:
+        port: 8080
+        targetPort: http
+        protocol: TCP
+  pipeline:
+    # -- Create an internal ClusterIP Service for the Triton pipeline.
+    enabled: true
+    controller: pipeline
+    type: ClusterIP
+    ports:
+      http:
+        port: 8000
+        targetPort: http
+        protocol: TCP
+      grpc:
+        port: 8001
+        targetPort: grpc
+        protocol: TCP
+  vlm:
+    # -- Create an internal ClusterIP Service for the VLM server.
+    enabled: true
+    controller: vlm
+    type: ClusterIP
+    ports:
+      http:
+        port: 8080
+        targetPort: http
+        protocol: TCP
+
+ingress:
+  api:
+    # -- Enable an ingress for the API gateway. Disabled by default because the official gateway has no authentication.
+    enabled: false
+    # -- IngressClass to use when ingress is enabled.
+    className: nginx
+    # -- Optional ingress annotations for authentication, TLS helpers, rewrites, etc.
+    annotations: {}
+    hosts:
+      - host: paddleocr-vl.example.local
+        paths:
+          - path: /
+            pathType: Prefix
+            service:
+              identifier: api
+              port: http
+    # -- Optional TLS entries for HTTPS-enabled ingress setups.
+    tls: []
+
+################################################################################
+# Persistence
+################################################################################
+persistence:
+  # -- Pipeline model/cache PVC. Advanced users can switch `type` to `hostPath` for local NVMe-backed storage, or intentionally use an RWX existing claim after validating sharing semantics.
+  pipeline-cache:
+    enabled: true
+    type: persistentVolumeClaim
+    accessMode: ReadWriteOnce
+    size: 50Gi
+    advancedMounts:
+      pipeline:
+        app:
+          - path: /cache
+            readOnly: false
+
+  # -- VLM model/cache PVC. Default is separate from `pipeline-cache` because one shared RWO PVC across separate Pods is not portable.
+  vlm-cache:
+    enabled: true
+    type: persistentVolumeClaim
+    accessMode: ReadWriteOnce
+    size: 100Gi
+    advancedMounts:
+      vlm:
+        app:
+          - path: /cache
+            readOnly: false
+
+  # -- Optional smaller runtime state for logs/tmp. When enabled, this mounts `/state` on all controllers and sets `TMPDIR=/state/tmp`.
+  runtime-state:
+    enabled: false
+    type: persistentVolumeClaim
+    accessMode: ReadWriteOnce
+    size: 20Gi
+    advancedMounts:
+      api:
+        app:
+          - path: /state
+            readOnly: false
+      pipeline:
+        app:
+          - path: /state
+            readOnly: false
+      vlm:
+        app:
+          - path: /state
+            readOnly: false
+
+################################################################################
+# Kubernetes security context and advanced bjw-s common settings
+################################################################################
+podSecurityContext:
+  # -- Apply a filesystem group so mounted volumes are writable by the runtime group even when the storage backend preserves ownership metadata.
+  fsGroup: 1000
+  # -- Only recurse ownership changes when Kubernetes detects a root mismatch.
+  fsGroupChangePolicy: OnRootMismatch
+
+# -- Optional container-level security context overrides.
+containerSecurityContext: {}
+
+# -- Optional node selector overrides.
+nodeSelector: {}
+
+# -- Optional toleration overrides.
+tolerations: []
+
+# -- Optional affinity overrides.
+affinity: {}
+
+# -- Optional default pod options override. When left empty, the chart creates pod defaults from the documented values above.
+defaultPodOptions: {}
+
+# -- Optional controller override. When a matching key is present, that controller is not generated by this chart.
+controllers: {}

@@ -159,3 +159,5 @@ static
 /containers/ace-step-1-5/local-data/
 /containers/fooocus_extend/docker-compose.yml
 /containers/fooocus_extend/local-data/
+/containers/paddleocr-vl-hps/docker-compose.yml
+/containers/paddleocr-vl-hps/local-data/
