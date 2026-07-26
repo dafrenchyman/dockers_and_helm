@@ -1,5 +1,7 @@
 # Helm Charts
 
+This directory contains the Helm charts committed to this repository. Each chart owns its generated README through the existing [`helm-docs`](https://github.com/norwoodj/helm-docs) pre-commit hook and a chart-local `README.md.gotmpl` template.
+
 ## Add this chart repo
 
 To make the published charts in this repository available to Helm:
@@ -9,34 +11,61 @@ helm repo add mrsharky https://charts.mrsharky.com/
 helm repo update
 ```
 
-## Available charts
+## Committed charts
 
-The following charts are currently committed in this repository:
+Only chart directories with a committed `Chart.yaml` are listed here.
 
-- `ambient-weather-prometheus-exporter`
-- `bluecherry`
-- `comfyui`
-- `kavita`
-- `nzbget-exporter`
-- `ps3netsrv`
-- `termix`
-- `ubooquity`
+| Chart                                                                           |        App version | Chart version | Description                                                             |
+| ------------------------------------------------------------------------------- | -----------------: | ------------: | ----------------------------------------------------------------------- |
+| [`ace-step-1-5`](./ace-step-1-5/)                                               |          `eddb621` |       `0.1.1` | ACE-Step 1.5 Gradio web UI with four-tier persistent storage.           |
+| [`ambient-weather-prometheus-exporter`](./ambient-weather-prometheus-exporter/) |            `1.0.0` |       `0.1.0` | Prometheus metric exporter for Ambient Weather stations.                |
+| [`bluecherry`](./bluecherry/)                                                   |            `1.0.0` |       `0.1.0` | Bluecherry DVR deployment.                                              |
+| [`comfyui`](./comfyui/)                                                         |          `v0.18.0` |       `0.1.2` | ComfyUI with baked ComfyUI-Manager and ComfyUI-Sentinel support.        |
+| [`cooklang`](./cooklang/)                                                       |           `0.26.0` |       `0.1.0` | Cooklang recipe server powered by CookCLI.                              |
+| [`docling-serve`](./docling-serve/)                                             |            `1.9.0` |       `0.1.2` | Docling-Serve API wrapper for AI document conversion.                   |
+| [`fooocus_extend`](./fooocus_extend/)                                           |          `67c346a` |       `0.1.1` | Fooocus_extend with repo-managed seeded presets, styles, and wildcards. |
+| [`kavita`](./kavita/)                                                           |            `0.4.8` |       `0.1.0` | Fast, feature-rich manga and reading server.                            |
+| [`nzbget-exporter`](./nzbget-exporter/)                                         |            `0.1.0` |       `0.1.0` | Prometheus exporter for NZBGet.                                         |
+| [`paddleocr-vl`](./paddleocr-vl/)                                               | `PaddleOCR-VL-1.6` |       `0.1.0` | High-performance PaddleOCR-VL OCR and document parsing API.             |
+| [`ps3netsrv`](./ps3netsrv/)                                                     |            `1.0.0` |       `0.1.0` | ps3netsrv deployment for serving PS3 game backups over the network.     |
+| [`termix`](./termix/)                                                           |            `2.0.0` |       `0.1.1` | Termix SSH/server-management web application.                           |
+| [`ubooquity`](./ubooquity/)                                                     |    `version-2.1.2` |       `0.1.0` | Lightweight home server for comics and ebooks.                          |
 
-# Instructions for publishing charts
+## Chart README generation
 
-## For each of the chart repos:
+The root pre-commit configuration runs `helm-docs` with:
 
-- `helm dependency update` - Updates the dependencies (and a lock file if present)
-- `helm dependency build .` - Builds the dependencies
-- `helm package .`
-- Move all the `*.tgz` into a common folder
+```text
+--chart-search-root=./charts
+--template-files=README.md.gotmpl
+```
 
-## To generate the `index.yaml`
+When chart metadata or values change, run:
 
-- In the common folder where all the `*.tgz have been moved`
-  - `helm repo index . --url https://charts.mrsharky.com/`
+```bash
+pre-commit run helm-docs --all-files
+```
 
-## Scriptable flow
+## Publishing charts
+
+### For each chart directory
+
+- `helm dependency update` updates dependencies and the lock file if present.
+- `helm dependency build .` builds dependencies.
+- `helm package .` packages the chart.
+- Move all generated `*.tgz` files into a common folder.
+
+### Generate `index.yaml`
+
+From the common package folder:
+
+```bash
+helm repo index . --url https://charts.mrsharky.com/
+```
+
+## Scriptable publishing flow
+
+Run this from `charts/`:
 
 ```bash
 set -euo pipefail
