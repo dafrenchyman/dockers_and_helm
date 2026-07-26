@@ -1,0 +1,265 @@
+# values.yaml — Docling-Serve API service wrapper for AI document conversion.
+# This chart started from https://github.com/khwong-c/helm-charts/tree/main/charts/docling-serve.
+
+# -- Global values passed through to chart templates.
+global: {}
+
+################################################################################
+# General
+################################################################################
+# -- Number of Docling-Serve replicas.
+replicaCount: 1
+
+image:
+  # -- Container image repository. Use `quay.io/docling-project/docling-serve-cu126` for CUDA 12.6 GPU processing.
+  repository: quay.io/docling-project/docling-serve-cpu
+  # -- Image pull policy.
+  pullPolicy: IfNotPresent
+  # -- Image tag. Defaults to the chart appVersion when empty.
+  tag: "v1.9.0"
+
+# -- Image pull secrets.
+imagePullSecrets: []
+
+# -- Override chart name.
+nameOverride: ""
+
+# -- Override full resource names.
+fullnameOverride: ""
+
+################################################################################
+# Compute and device
+################################################################################
+computeEngine:
+  # -- Compute engine type. Use `local` for synchronous processing or `rq` for Redis Queue-backed processing.
+  type: local
+
+device:
+  # -- Device type used by Docling processing. Supported values are `cpu` and `cuda`.
+  type: cpu
+  # -- CUDA devices specification used when `device.type` is `cuda`, such as `cuda:0` or `cuda:0,cuda:1`.
+  cudaDevices: "cuda:0"
+
+################################################################################
+# Redis configuration
+################################################################################
+redis:
+  external:
+    # -- Use an external Redis instance instead of deploying embedded Redis when `computeEngine.type` is `rq`.
+    enabled: false
+    # -- External Redis host.
+    host: ""
+    # -- External Redis port.
+    port: 6379
+    # -- External Redis password. Stored in a generated Kubernetes Secret when set.
+    password: ""  # pragma: allowlist secret
+    # -- Redis database number.
+    db: 0
+  image:
+    # -- Embedded Redis image repository.
+    repository: redis
+    # -- Embedded Redis image tag.
+    tag: "7-alpine"
+    # -- Embedded Redis image pull policy.
+    pullPolicy: IfNotPresent
+  # -- Embedded Redis resource requests and limits.
+  resources: {}
+
+################################################################################
+# Environment variables
+################################################################################
+env:
+  uvicorn:
+    # -- Uvicorn bind host.
+    host: "0.0.0.0"
+    # -- Uvicorn bind port.
+    port: 5001
+    # -- Enable Uvicorn auto-reload.
+    reload: false
+    # -- Number of Uvicorn workers.
+    workers: 1
+
+  doclingServe:
+    # -- Enable the Docling-Serve UI.
+    enableUi: false
+    # -- Enable remote processing services.
+    enableRemoteServices: false
+    # -- Make conversion results available only once.
+    singleUseResults: true
+    # -- Maximum document result retention timeout in seconds.
+    maxDocumentTimeout: 604800
+    # -- Pre-load models at container startup.
+    loadModelsAtBoot: false
+
+  doclingPerf:
+    # -- Number of Docling processing threads.
+    numThreads: 4
+    # -- Number of pages processed per batch.
+    pageBatchSize: 4
+    # -- Number of elements processed per batch.
+    elementsBatchSize: 8
+
+  # -- Additional environment variables added as-is to the Docling-Serve container.
+  custom: {}
+
+################################################################################
+# Model cache persistence and pre-loading
+################################################################################
+modelCache:
+  # -- Enable persistent model cache PVC and mount.
+  enabled: false
+  # -- StorageClass for the model cache PVC. Empty uses the cluster default StorageClass.
+  storageClass: ""
+  # -- Model cache PVC size.
+  size: 80Gi
+  # -- Model cache PVC access mode.
+  accessMode: ReadWriteOnce
+  # -- Container mount path for the model cache. Also sets `DOCLING_SERVE_ARTIFACTS_PATH`.
+  mountPath: /modelcache
+
+  job:
+    # -- Enable the model download Job when model cache is enabled.
+    enabled: true
+    # -- Override image settings for the model download Job. Empty uses the main image settings.
+    image: {}
+    # -- TTL in seconds after the model download Job finishes.
+    ttlSecondsAfterFinished: 100
+    # -- Resource requests and limits for the model download Job.
+    resources: {}
+    # -- Pod security context for the model download Job. Empty inherits `podSecurityContext`.
+    podSecurityContext: {}
+    # -- Container security context for the model-loader container. Empty inherits `securityContext`.
+    securityContext: {}
+    # -- RuntimeClassName for the model download Job. Empty inherits `runtimeClassName`.
+    runtimeClassName: ""
+
+  models:
+    # -- Download all available Docling models.
+    all: false
+    # -- List of specific Docling models to download. The default list mirrors the models baked into the v1.9.0 container image. Common additional values include `code_formula`, `smolvlm`, and `granite_vision`.
+    list:
+      - layout
+      - tableformer
+      - picture_classifier
+      - rapidocr
+      - easyocr
+
+################################################################################
+# Runtime cache persistence
+################################################################################
+runtimeCache:
+  # -- Enable a PVC for runtime library caches such as Hugging Face, XDG, and Torch caches. This keeps unexpected model/library downloads out of the container writable layer.
+  enabled: false
+  # -- Existing PVC claim name for runtime caches. When set, no runtime cache PVC is created.
+  existingClaim: ""
+  # -- StorageClass for the runtime cache PVC. Empty uses the cluster default StorageClass.
+  storageClass: ""
+  # -- Runtime cache PVC size.
+  size: 20Gi
+  # -- Runtime cache PVC access mode.
+  accessMode: ReadWriteOnce
+  # -- Container mount path for runtime caches.
+  mountPath: /cache
+  # -- Set `HF_HOME` to `runtimeCache.mountPath`/huggingface.
+  setHuggingFaceHome: true
+  # -- Set `XDG_CACHE_HOME` to `runtimeCache.mountPath`/xdg.
+  setXdgCacheHome: true
+  # -- Set `TORCH_HOME` to `runtimeCache.mountPath`/torch.
+  setTorchHome: true
+
+################################################################################
+# Scratch workspace persistence
+################################################################################
+scratch:
+  # -- Enable a PVC for Docling-Serve scratch files and conversion results. This sets `DOCLING_SERVE_SCRATCH_PATH`.
+  enabled: false
+  # -- Existing PVC claim name for scratch storage. When set, no scratch PVC is created.
+  existingClaim: ""
+  # -- StorageClass for the scratch PVC. Empty uses the cluster default StorageClass.
+  storageClass: ""
+  # -- Scratch PVC size.
+  size: 20Gi
+  # -- Scratch PVC access mode.
+  accessMode: ReadWriteOnce
+  # -- Container mount path for scratch files and conversion results.
+  mountPath: /scratch
+  # -- Also set `GRADIO_TEMP_DIR` to `scratch.mountPath` when the UI is enabled.
+  setGradioTempDir: true
+
+################################################################################
+# Pod configuration
+################################################################################
+# -- Pod annotations.
+podAnnotations: {}
+
+# -- Pod labels.
+podLabels: {}
+
+# -- RuntimeClassName for Docling-Serve pods, such as `nvidia` when GPU workloads require the NVIDIA runtime.
+runtimeClassName: ""
+
+# -- Pod security context.
+podSecurityContext: {}
+
+# -- Container security context.
+securityContext: {}
+
+################################################################################
+# Networking
+################################################################################
+service:
+  # -- Service type.
+  type: ClusterIP
+  # -- Service port.
+  port: 5001
+
+ingress:
+  # -- Enable ingress.
+  enabled: false
+  # -- Ingress class name.
+  className: ""
+  # -- Ingress annotations.
+  annotations: {}
+  # -- Ingress hosts configuration.
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  # -- Ingress TLS configuration.
+  tls: []
+
+################################################################################
+# Resources and scheduling
+################################################################################
+# -- Container resource requests and limits.
+resources: {}
+
+# -- Liveness probe configuration.
+livenessProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+# -- Readiness probe configuration.
+readinessProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+# -- Node selector.
+nodeSelector: {}
+
+# -- Tolerations.
+tolerations: []
+
+# -- Affinity rules.
+affinity: {}

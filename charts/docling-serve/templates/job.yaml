@@ -1,0 +1,97 @@
+{{- if and .Values.modelCache.enabled .Values.modelCache.job.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "docling-serve.fullname" . }}-model-loader
+  labels:
+    {{- include "docling-serve.labels" . | nindent 4 }}
+    app.kubernetes.io/component: model-loader
+spec:
+  {{- if .Values.modelCache.job.ttlSecondsAfterFinished }}
+  ttlSecondsAfterFinished: {{ .Values.modelCache.job.ttlSecondsAfterFinished }}
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        {{- include "docling-serve.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: model-loader
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- $jobRuntimeClassName := default .Values.runtimeClassName .Values.modelCache.job.runtimeClassName }}
+      {{- with $jobRuntimeClassName }}
+      runtimeClassName: {{ . | quote }}
+      {{- end }}
+      {{- $jobPodSecurityContext := default .Values.podSecurityContext .Values.modelCache.job.podSecurityContext }}
+      {{- with $jobPodSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Never
+      containers:
+        - name: model-loader
+          {{- $jobSecurityContext := default .Values.securityContext .Values.modelCache.job.securityContext }}
+          {{- with $jobSecurityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if .Values.modelCache.job.image.repository }}
+          image: "{{ .Values.modelCache.job.image.repository }}:{{ .Values.modelCache.job.image.tag | default .Chart.AppVersion }}"
+          {{- else }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          {{- end }}
+          {{- if .Values.modelCache.job.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.modelCache.job.image.pullPolicy }}
+          {{- else }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- end }}
+          {{- if .Values.runtimeCache.enabled }}
+          env:
+            {{- if .Values.runtimeCache.setHuggingFaceHome }}
+            - name: HF_HOME
+              value: {{ printf "%s/huggingface" .Values.runtimeCache.mountPath | quote }}
+            {{- end }}
+            {{- if .Values.runtimeCache.setXdgCacheHome }}
+            - name: XDG_CACHE_HOME
+              value: {{ printf "%s/xdg" .Values.runtimeCache.mountPath | quote }}
+            {{- end }}
+            {{- if .Values.runtimeCache.setTorchHome }}
+            - name: TORCH_HOME
+              value: {{ printf "%s/torch" .Values.runtimeCache.mountPath | quote }}
+            {{- end }}
+          {{- end }}
+          command:
+            - docling-tools
+            - models
+            - download
+            - '--output-dir={{ .Values.modelCache.mountPath }}'
+            {{- if .Values.modelCache.models.all }}
+            - '--all'
+            {{- else }}
+            {{- range .Values.modelCache.models.list }}
+            - {{ . | quote }}
+            {{- end }}
+            {{- end }}
+          volumeMounts:
+            - name: model-cache
+              mountPath: {{ .Values.modelCache.mountPath }}
+            {{- if .Values.runtimeCache.enabled }}
+            - name: runtime-cache
+              mountPath: {{ .Values.runtimeCache.mountPath }}
+            {{- end }}
+          {{- with .Values.modelCache.job.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      volumes:
+        - name: model-cache
+          persistentVolumeClaim:
+            claimName: {{ include "docling-serve.fullname" . }}-model-cache
+        {{- if .Values.runtimeCache.enabled }}
+        - name: runtime-cache
+          persistentVolumeClaim:
+            claimName: {{ default (printf "%s-runtime-cache" (include "docling-serve.fullname" .)) .Values.runtimeCache.existingClaim }}
+        {{- end }}
+{{- end }}

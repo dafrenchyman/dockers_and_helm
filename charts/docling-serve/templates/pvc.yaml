@@ -1,0 +1,53 @@
+{{- if .Values.modelCache.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "docling-serve.fullname" . }}-model-cache
+  labels:
+    {{- include "docling-serve.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.modelCache.accessMode }}
+  {{- if .Values.modelCache.storageClass }}
+  storageClassName: {{ .Values.modelCache.storageClass | quote }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.modelCache.size }}
+{{- end }}
+{{- if and .Values.runtimeCache.enabled (not .Values.runtimeCache.existingClaim) }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "docling-serve.fullname" . }}-runtime-cache
+  labels:
+    {{- include "docling-serve.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.runtimeCache.accessMode }}
+  {{- if .Values.runtimeCache.storageClass }}
+  storageClassName: {{ .Values.runtimeCache.storageClass | quote }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.runtimeCache.size }}
+{{- end }}
+{{- if and .Values.scratch.enabled (not .Values.scratch.existingClaim) }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "docling-serve.fullname" . }}-scratch
+  labels:
+    {{- include "docling-serve.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.scratch.accessMode }}
+  {{- if .Values.scratch.storageClass }}
+  storageClassName: {{ .Values.scratch.storageClass | quote }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.scratch.size }}
+{{- end }}

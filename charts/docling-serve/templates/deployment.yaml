@@ -1,0 +1,194 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "docling-serve.fullname" . }}
+  labels:
+    {{- include "docling-serve.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "docling-serve.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "docling-serve.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.runtimeClassName }}
+      runtimeClassName: {{ . | quote }}
+      {{- end }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.env.uvicorn.port }}
+              protocol: TCP
+          env:
+            # Uvicorn Configuration
+            - name: UVICORN_HOST
+              value: {{ .Values.env.uvicorn.host | quote }}
+            - name: UVICORN_PORT
+              value: {{ .Values.env.uvicorn.port | quote }}
+            - name: UVICORN_RELOAD
+              value: {{ .Values.env.uvicorn.reload | quote }}
+            - name: UVICORN_WORKERS
+              value: {{ .Values.env.uvicorn.workers | quote }}
+            # Docling Serve Configuration
+            - name: DOCLING_SERVE_ENABLE_UI
+              value: {{ .Values.env.doclingServe.enableUi | quote }}
+            - name: DOCLING_SERVE_ENABLE_REMOTE_SERVICES
+              value: {{ .Values.env.doclingServe.enableRemoteServices | quote }}
+            - name: DOCLING_SERVE_SINGLE_USE_RESULTS
+              value: {{ .Values.env.doclingServe.singleUseResults | quote }}
+            - name: DOCLING_SERVE_MAX_DOCUMENT_TIMEOUT
+              value: {{ .Values.env.doclingServe.maxDocumentTimeout | quote }}
+            - name: DOCLING_SERVE_LOAD_MODELS_AT_BOOT
+              value: {{ .Values.env.doclingServe.loadModelsAtBoot | quote }}
+            # Docling Performance Configuration
+            - name: DOCLING_NUM_THREADS
+              value: {{ .Values.env.doclingPerf.numThreads | quote }}
+            - name: DOCLING_PERF_PAGE_BATCH_SIZE
+              value: {{ .Values.env.doclingPerf.pageBatchSize | quote }}
+            - name: DOCLING_PERF_ELEMENTS_BATCH_SIZE
+              value: {{ .Values.env.doclingPerf.elementsBatchSize | quote }}
+            # Device Configuration
+            - name: DOCLING_DEVICE
+              {{- if eq .Values.device.type "cuda" }}
+              value: {{ .Values.device.cudaDevices | quote }}
+              {{- else }}
+              value: "cpu"
+              {{- end }}
+            # Compute Engine Configuration
+            - name: DOCLING_SERVE_ENG_KIND
+              value: {{ .Values.computeEngine.type | quote }}
+            {{- if eq .Values.computeEngine.type "rq" }}
+            - name: DOCLING_SERVE_ENG_RQ_REDIS_URL
+              {{- if .Values.redis.external.enabled }}
+              {{- if .Values.redis.external.password }}
+              value: "redis://:$(REDIS_PASSWORD)@{{ .Values.redis.external.host }}:{{ .Values.redis.external.port }}/{{ .Values.redis.external.db }}"
+              {{- else }}
+              value: "redis://{{ .Values.redis.external.host }}:{{ .Values.redis.external.port }}/{{ .Values.redis.external.db }}"
+              {{- end }}
+              {{- else }}
+              value: "redis://{{ include "docling-serve.fullname" . }}-redis:6379/0"
+              {{- end }}
+            {{- if .Values.redis.external.password }}
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "docling-serve.fullname" . }}-secret
+                  key: redis-password
+            {{- end }}
+            {{- end }}
+            {{- if .Values.modelCache.enabled }}
+            # Model Artifacts Path
+            - name: DOCLING_SERVE_ARTIFACTS_PATH
+              value: {{ .Values.modelCache.mountPath | quote }}
+            {{- end }}
+            {{- if .Values.runtimeCache.enabled }}
+            # Runtime library caches
+            {{- if .Values.runtimeCache.setHuggingFaceHome }}
+            - name: HF_HOME
+              value: {{ printf "%s/huggingface" .Values.runtimeCache.mountPath | quote }}
+            {{- end }}
+            {{- if .Values.runtimeCache.setXdgCacheHome }}
+            - name: XDG_CACHE_HOME
+              value: {{ printf "%s/xdg" .Values.runtimeCache.mountPath | quote }}
+            {{- end }}
+            {{- if .Values.runtimeCache.setTorchHome }}
+            - name: TORCH_HOME
+              value: {{ printf "%s/torch" .Values.runtimeCache.mountPath | quote }}
+            {{- end }}
+            {{- end }}
+            {{- if .Values.scratch.enabled }}
+            # Scratch workspace
+            - name: DOCLING_SERVE_SCRATCH_PATH
+              value: {{ .Values.scratch.mountPath | quote }}
+            {{- if .Values.scratch.setGradioTempDir }}
+            - name: GRADIO_TEMP_DIR
+              value: {{ .Values.scratch.mountPath | quote }}
+            {{- end }}
+            {{- end }}
+            # Custom Environment Variables
+            {{- range $key, $value := .Values.env.custom }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if or .Values.modelCache.enabled .Values.runtimeCache.enabled .Values.scratch.enabled }}
+          volumeMounts:
+            {{- if .Values.modelCache.enabled }}
+            - name: model-cache
+              mountPath: {{ .Values.modelCache.mountPath }}
+            {{- end }}
+            {{- if .Values.runtimeCache.enabled }}
+            - name: runtime-cache
+              mountPath: {{ .Values.runtimeCache.mountPath }}
+            {{- end }}
+            {{- if .Values.scratch.enabled }}
+            - name: scratch
+              mountPath: {{ .Values.scratch.mountPath }}
+            {{- end }}
+          {{- end }}
+      {{- if or .Values.modelCache.enabled .Values.runtimeCache.enabled .Values.scratch.enabled }}
+      volumes:
+        {{- if .Values.modelCache.enabled }}
+        - name: model-cache
+          persistentVolumeClaim:
+            claimName: {{ include "docling-serve.fullname" . }}-model-cache
+        {{- end }}
+        {{- if .Values.runtimeCache.enabled }}
+        - name: runtime-cache
+          persistentVolumeClaim:
+            claimName: {{ default (printf "%s-runtime-cache" (include "docling-serve.fullname" .)) .Values.runtimeCache.existingClaim }}
+        {{- end }}
+        {{- if .Values.scratch.enabled }}
+        - name: scratch
+          persistentVolumeClaim:
+            claimName: {{ default (printf "%s-scratch" (include "docling-serve.fullname" .)) .Values.scratch.existingClaim }}
+        {{- end }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

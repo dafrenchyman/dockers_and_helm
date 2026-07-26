@@ -1,0 +1,62 @@
+{{ template "chart.header" . }}
+
+{{ template "chart.badgesSection" . }}
+
+{{ template "chart.deprecationWarning" . }}
+
+{{ template "chart.description" . }}
+
+{{ template "chart.homepageLine" . }}
+
+## Introduction
+
+Docling-Serve is a FastAPI-based service that wraps the [Docling](https://github.com/docling-project/docling) document conversion toolkit, providing a REST API for converting document formats such as PDF and DOCX into structured formats like Markdown, JSON, and HTML.
+
+This chart supports CPU and GPU image selection, local synchronous processing, Redis Queue-backed asynchronous processing, persistent model caching, and model pre-loading.
+
+## Storage notes
+
+The `docling-serve-cpu:v1.9.0` image runs as UID `1001`, sets `HOME=/opt/app-root/src`, and bakes default model artifacts into `/opt/app-root/src/.cache/docling/models`. When `modelCache.enabled=true`, this chart follows the Docling-Serve Kubernetes examples by setting `DOCLING_SERVE_ARTIFACTS_PATH` to `modelCache.mountPath` and mounting the model PVC there.
+
+That model PVC is only the Docling artifacts directory. Runtime libraries may still write caches such as Hugging Face, XDG, or Torch caches, and Docling-Serve uses a scratch workspace for conversion results. Enable `runtimeCache` and `scratch` when you want those writes to land on explicit PVCs instead of the container writable layer or node ephemeral storage.
+
+## Attribution
+
+This chart started from the [khwong-c/helm-charts docling-serve chart](https://github.com/khwong-c/helm-charts/tree/main/charts/docling-serve). The templates and values were adapted for this repository's chart layout and README generation conventions.
+
+## Installing Chart from repo
+
+To install the chart with the release name `my-release`:
+
+```console
+$ helm repo add mrsharky http://charts.mrsharky.com
+$ helm install my-release mrsharky/{{ template "chart.name" . }}
+```
+
+## Installing Chart from source
+
+Verify everything is correct:
+
+```bash
+helm lint .
+```
+
+Install or upgrade:
+
+```bash
+helm upgrade --install {{ template "chart.name" . }} . -f values.yaml --wait --timeout 5m --atomic
+```
+
+Uninstall:
+
+```bash
+helm delete {{ template "chart.name" . }}
+```
+
+{{ template "chart.sourcesSection" . }}
+
+{{ template "chart.requirementsSection" . }}
+
+{{ template "chart.valuesSection" . }}
+
+{{ template "helm-docs.versionFooter" . }}
