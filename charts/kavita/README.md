@@ -15,7 +15,7 @@ Chart uses the awesome common library from [k8s@home](https://github.com/k8s-at-
 To install the chart with the release name `my-release`:
 
 ```console
-$ helm repo mrsharky http://charts.mrsharky.com
+$ helm repo add mrsharky https://charts.mrsharky.com/
 $ helm install my-release mrsharky/kavita
 ```
 
@@ -48,7 +48,7 @@ helm delete kavita
 ## Packaging
 ```bash
 helm package kavita
-helm repo index . --url https://charts.mrsharky.com
+helm repo index . --url https://charts.mrsharky.com/
 ```
 
 ## Source Code

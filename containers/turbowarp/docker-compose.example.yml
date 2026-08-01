@@ -1,0 +1,14 @@
+services:
+  turbowarp:
+    image: ghcr.io/dafrenchyman/turbowarp:upstream-a2946ee
+    container_name: turbowarp
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: "Etc/UTC"
+      UMASK: "022"
+    volumes:
+      - ./local-data/config:/config

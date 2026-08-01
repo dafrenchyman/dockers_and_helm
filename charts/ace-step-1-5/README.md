@@ -22,7 +22,7 @@ This chart assumes an NVIDIA-backed workload and separates persistence into four
 To install the chart with the release name `my-release`:
 
 ```console
-$ helm repo add mrsharky http://charts.mrsharky.com
+$ helm repo add mrsharky https://charts.mrsharky.com/
 $ helm install my-release mrsharky/ace-step-1-5
 ```
 
@@ -55,7 +55,7 @@ helm delete ace-step-1-5
 ## Packaging
 ```bash
 helm package ace-step-1-5
-helm repo index . --url https://charts.mrsharky.com
+helm repo index . --url https://charts.mrsharky.com/
 ```
 
 ## Source Code

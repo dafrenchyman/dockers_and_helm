@@ -161,3 +161,5 @@ static
 /containers/fooocus_extend/local-data/
 /containers/paddleocr-vl-hps/docker-compose.yml
 /containers/paddleocr-vl-hps/local-data/
+/containers/turbowarp/docker-compose.yml
+/containers/turbowarp/local-data/

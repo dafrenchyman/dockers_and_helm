@@ -12,12 +12,7 @@
 
 Chart uses the awesome common library from [bjw-s-labs](https://bjw-s-labs.github.io/helm-charts/)
 
-This chart assumes an NVIDIA-backed workload and separates persistence into four tiers:
-
-- model storage
-- user-provided inputs
-- generated outputs
-- smaller runtime state for config, caches, logs, and temporary files
+This chart deploys the TurboWarp GUI/editor from a repo-owned static web image using the LinuxServer.io nginx runtime, so Scratch-compatible projects can be created locally without using Scratch's website. The chart exposes LinuxServer-style PUID/PGID/TZ/UMASK settings; no persistent volume is required for the TurboWarp GUI itself.
 
 ## Installing Chart from repo
 

@@ -15,7 +15,7 @@ Chart uses the awesome common library from [k8s@home](https://github.com/k8s-at-
 To install the chart with the release name `my-release`:
 
 ```console
-$ helm repo add mrsharky http://charts.mrsharky.com
+$ helm repo add mrsharky https://charts.mrsharky.com/
 $ helm install my-release mrsharky/ambient-weather-prometheus-exporter
 ```
 
@@ -48,7 +48,7 @@ helm delete ambient-weather-prometheus-exporter
 ## Packaging
 ```bash
 helm package ambient-weather-prometheus-exporter
-helm repo index . --url https://charts.mrsharky.com
+helm repo index . --url https://charts.mrsharky.com/
 ```
 
 ## Source Code

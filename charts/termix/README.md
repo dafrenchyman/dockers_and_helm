@@ -15,7 +15,7 @@ Chart uses the awesome common library from [bjw-s-labs](https://bjw-s-labs.githu
 To install the chart with the release name `my-release`:
 
 ```console
-$ helm repo add mrsharky http://charts.mrsharky.com
+$ helm repo add mrsharky https://charts.mrsharky.com/
 $ helm install my-release mrsharky/termix
 ```
 
@@ -48,7 +48,7 @@ helm delete termix
 ## Packaging
 ```bash
 helm package termix
-helm repo index . --url https://charts.mrsharky.com
+helm repo index . --url https://charts.mrsharky.com/
 ```
 
 ## Source Code

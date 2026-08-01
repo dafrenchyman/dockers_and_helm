@@ -1,0 +1,7 @@
+#!/usr/bin/with-contenv bash
+set -e
+
+mkdir -p /config/www /config/nginx/site-confs
+cp -a /opt/turbowarp/www/. /config/www/
+cp /opt/turbowarp/default.conf /config/nginx/site-confs/default.conf
+chown -R abc:abc /config/www /config/nginx/site-confs/default.conf

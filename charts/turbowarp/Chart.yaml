@@ -1,0 +1,21 @@
+apiVersion: v2
+name: turbowarp
+description: TurboWarp Scratch-compatible editor for local self-hosting
+type: application
+kubeVersion: ">=1.24.0-0"
+maintainers:
+  - name: julien-pierret
+    email: julien.pierret@gmail.com
+dependencies:
+  - name: common
+    repository: https://bjw-s-labs.github.io/helm-charts/
+    version: 4.3.0
+home: https://github.com/dafrenchyman/dockers_and_helm/tree/master/charts/turbowarp
+sources:
+  - https://github.com/TurboWarp/scratch-gui
+  - https://docs.turbowarp.org/development/getting-started
+  - https://docs.linuxserver.io/images/docker-nginx/
+  - https://github.com/dafrenchyman/dockers_and_helm
+  - https://bjw-s-labs.github.io/helm-charts/
+version: 0.1.0
+appVersion: a2946ee

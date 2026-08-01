@@ -1,0 +1,184 @@
+# values.yaml — TurboWarp chart
+# This file is meant for the bjw-s "common" library chart.
+# Ref docs: https://github.com/bjw-s-labs/helm-charts/tree/main/charts/library/common
+
+################################################################################
+# Global settings
+################################################################################
+# -- Global bjw-s common values. Leave empty unless you need common-library-wide overrides such as name overrides.
+global: {}
+
+################################################################################
+# Runtime settings passed to LinuxServer.io nginx
+################################################################################
+turbowarp:
+  # -- Timezone passed to the LinuxServer.io nginx runtime as `TZ`.
+  timezone: "Etc/UTC"
+  # -- User ID passed as `PUID`; useful when optional `/config` persistence is backed by host-owned storage.
+  puid: "1000"
+  # -- Group ID passed as `PGID`; useful when optional `/config` persistence is backed by host-owned storage.
+  pgid: "1000"
+  # -- File creation mask passed as `UMASK` for LinuxServer.io runtime-managed files.
+  umask: "022"
+
+################################################################################
+# Workload: single static TurboWarp editor deployment
+################################################################################
+controllers:
+  main:
+    # -- Deploy TurboWarp as a Deployment because the GUI is static and does not require stable Pod identity.
+    type: deployment
+    # -- Number of TurboWarp web Pods. One replica is enough for home/local use and avoids unnecessary duplicate static servers.
+    replicas: 1
+    # -- Rolling updates are safe because the image serves static files and has no required shared project volume.
+    strategy: RollingUpdate
+    containers:
+      app:
+        image:
+          # -- Repo-owned TurboWarp static web image repository.
+          repository: ghcr.io/dafrenchyman/turbowarp
+          # -- Image tag pinned to the verified TurboWarp scratch-gui commit `a2946ee`.
+          tag: upstream-a2946ee
+          # -- Image pull policy for the TurboWarp web container.
+          pullPolicy: IfNotPresent
+        env:
+          # -- LinuxServer.io runtime UID for writable `/config` files when optional persistence is enabled.
+          - name: PUID
+            value: "{{ .Values.turbowarp.puid }}"
+          # -- LinuxServer.io runtime GID for writable `/config` files when optional persistence is enabled.
+          - name: PGID
+            value: "{{ .Values.turbowarp.pgid }}"
+          # -- LinuxServer.io runtime timezone.
+          - name: TZ
+            value: "{{ .Values.turbowarp.timezone }}"
+          # -- LinuxServer.io file creation mask.
+          - name: UMASK
+            value: "{{ .Values.turbowarp.umask }}"
+        ports:
+          # -- Main HTTP port exposed by the TurboWarp nginx container.
+          - name: web
+            containerPort: 80
+            protocol: TCP
+        probes:
+          startup:
+            # -- Enable startup probe against the static GUI root before liveness checks begin.
+            enabled: true
+            # -- Use a fully custom Kubernetes startup probe spec so the check is exactly HTTP `/` on the named `web` port.
+            custom: true
+            # -- Kubernetes startup probe fields rendered under `startupProbe`.
+            spec:
+              # -- HTTP check used by the startup probe.
+              httpGet:
+                # -- HTTP path used by the startup probe.
+                path: /
+                # -- Named container port used by the startup probe.
+                port: web
+              # -- Startup probe initial delay in seconds.
+              initialDelaySeconds: 10
+              # -- Startup probe interval in seconds.
+              periodSeconds: 5
+              # -- Startup probe failure threshold; allows up to 90 seconds after the initial delay.
+              failureThreshold: 18
+          readiness:
+            # -- Enable readiness probe against the static GUI root so traffic only reaches ready nginx Pods.
+            enabled: true
+            # -- Use a fully custom Kubernetes readiness probe spec so the check is exactly HTTP `/` on the named `web` port.
+            custom: true
+            # -- Kubernetes readiness probe fields rendered under `readinessProbe`.
+            spec:
+              # -- HTTP check used by the readiness probe.
+              httpGet:
+                # -- HTTP path used by the readiness probe.
+                path: /
+                # -- Named container port used by the readiness probe.
+                port: web
+              # -- Readiness probe initial delay in seconds.
+              initialDelaySeconds: 10
+              # -- Readiness probe interval in seconds.
+              periodSeconds: 10
+              # -- Readiness probe failure threshold.
+              failureThreshold: 3
+          liveness:
+            # -- Enable liveness probe against the static GUI root to restart nginx if it stops serving.
+            enabled: true
+            # -- Use a fully custom Kubernetes liveness probe spec so the check is exactly HTTP `/` on the named `web` port.
+            custom: true
+            # -- Kubernetes liveness probe fields rendered under `livenessProbe`.
+            spec:
+              # -- HTTP check used by the liveness probe.
+              httpGet:
+                # -- HTTP path used by the liveness probe.
+                path: /
+                # -- Named container port used by the liveness probe.
+                port: web
+              # -- Liveness probe initial delay in seconds.
+              initialDelaySeconds: 30
+              # -- Liveness probe interval in seconds.
+              periodSeconds: 30
+              # -- Liveness probe failure threshold.
+              failureThreshold: 3
+
+################################################################################
+# Service: internal access to the TurboWarp editor
+################################################################################
+service:
+  main:
+    # -- Create a Service for the TurboWarp web application.
+    enabled: true
+    # -- Route traffic to the `main` controller.
+    controller: main
+    # -- Use ClusterIP by default; enable ingress or another exposure method separately for browser access outside the cluster.
+    type: ClusterIP
+    ports:
+      http:
+        # -- Service port for the TurboWarp editor.
+        port: 80
+        # -- Target the named `web` port on the container.
+        targetPort: web
+        # -- Service port protocol for the TurboWarp editor.
+        protocol: TCP
+
+################################################################################
+# Persistence: optional LinuxServer.io /config storage
+################################################################################
+persistence:
+  config:
+    # -- Enable only if you want to persist LinuxServer.io nginx config, logs, and copied static-file state. This is not Scratch project persistence and is not required for the TurboWarp GUI itself.
+    enabled: false
+    # -- Default to a PVC-managed `/config` volume. Advanced users can switch this to another bjw-s-supported persistence type.
+    type: persistentVolumeClaim
+    # -- Access mode for the generated `/config` PVC when enabled.
+    accessMode: ReadWriteOnce
+    # -- Requested PVC size for nginx config, logs, and copied static files.
+    size: 1Gi
+    advancedMounts:
+      main:
+        app:
+          # -- Mount path used by LinuxServer.io nginx for web files, site config, and logs.
+          - path: /config
+
+################################################################################
+# Ingress: optional HTTP(S) entrypoint for browsers
+################################################################################
+ingress:
+  main:
+    # -- Enable ingress if you want TurboWarp reachable via a hostname.
+    enabled: false
+    # -- IngressClass to use when ingress is enabled.
+    className: nginx
+    # -- Optional ingress annotations for cert-manager, auth, rewrites, etc.
+    annotations: {}
+    hosts:
+      # -- Host rules for the TurboWarp ingress.
+      - host: turbowarp
+        paths:
+          - path: /
+            # -- Prefix routing sends all editor paths to the TurboWarp Service.
+            pathType: Prefix
+            service:
+              # -- Send ingress traffic to the main Service.
+              identifier: main
+              # -- Use the HTTP service port defined above.
+              port: http
+    # -- Optional TLS entries for HTTPS-enabled ingress setups.
+    tls: []

@@ -17,7 +17,7 @@ ComfyUI-Sentinel's `separate_users` support is only partial. It helps with input
 To install the chart with the release name `my-release`:
 
 ```console
-$ helm repo add mrsharky http://charts.mrsharky.com
+$ helm repo add mrsharky https://charts.mrsharky.com/
 $ helm install my-release mrsharky/comfyui
 ```
 
@@ -50,7 +50,7 @@ helm delete comfyui
 ## Packaging
 ```bash
 helm package comfyui
-helm repo index . --url https://charts.mrsharky.com
+helm repo index . --url https://charts.mrsharky.com/
 ```
 
 ## Source Code

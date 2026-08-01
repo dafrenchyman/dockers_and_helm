@@ -13,6 +13,7 @@ Only directories with committed Dockerfile content are listed here.
 | `bluecherry-server`                   | [`bluecherry-server/`](./bluecherry-server/)                                     | Bluecherry server image variant that allows runtime UID/GID assignment.                                                                      |
 | `comfyui`                             | [`comfyui/`](./comfyui/)                                                         | Repo-owned ComfyUI image with pinned ComfyUI, baked ComfyUI-Manager, baked ComfyUI-Sentinel, and stable runtime paths.                       |
 | `fooocus_extend`                      | [`fooocus_extend/`](./fooocus_extend/)                                           | Repo-owned Fooocus_extend image with pinned upstream code and seeded presets, styles, and wildcards.                                         |
+| `turbowarp`                           | [`turbowarp/`](./turbowarp/)                                                     | Pinned TurboWarp GUI static web image served by LinuxServer.io nginx for local Scratch-compatible editing.                                   |
 | `paddleocr-vl-hps`                    | [`paddleocr-vl-hps/`](./paddleocr-vl-hps/)                                       | Generic PaddleOCR-VL gateway and pipeline images used by the `charts/paddleocr-vl` Helm chart.                                               |
 
 ## Container README automation

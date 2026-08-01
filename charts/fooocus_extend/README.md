@@ -21,7 +21,7 @@ This chart assumes an NVIDIA-backed workload and separates persistence into thre
 To install the chart with the release name `my-release`:
 
 ```console
-$ helm repo add mrsharky http://charts.mrsharky.com
+$ helm repo add mrsharky https://charts.mrsharky.com/
 $ helm install my-release mrsharky/fooocus_extend
 ```
 
@@ -54,7 +54,7 @@ helm delete fooocus_extend
 ## Packaging
 ```bash
 helm package fooocus_extend
-helm repo index . --url https://charts.mrsharky.com
+helm repo index . --url https://charts.mrsharky.com/
 ```
 
 ## Source Code

@@ -104,7 +104,7 @@ The backend is intentionally unauthenticated by default. For production, keep th
 To install the chart with the release name `my-release`:
 
 ```console
-$ helm repo add mrsharky http://charts.mrsharky.com
+$ helm repo add mrsharky https://charts.mrsharky.com/
 $ helm install my-release mrsharky/paddleocr-vl
 ```
 
@@ -137,7 +137,7 @@ helm delete paddleocr-vl
 ## Packaging
 ```bash
 helm package paddleocr-vl
-helm repo index . --url https://charts.mrsharky.com
+helm repo index . --url https://charts.mrsharky.com/
 ```
 
 ## Source Code

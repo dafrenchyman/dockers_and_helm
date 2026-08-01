@@ -1,0 +1,12 @@
+{{/* templates/common.yaml */}}
+---
+{{- include "bjw-s.common.loader.init" . }}
+
+{{- define "app-template.hardcodedValues" -}}
+{{- if not .Values.global.nameOverride }}
+global:
+  nameOverride: "{{ .Release.Name }}"
+{{- end }}
+{{- end -}}
+
+{{ include "bjw-s.common.loader.generate" . }}

@@ -17,7 +17,7 @@ This chart deploys the upstream Cooklang CookCLI server. Enable `persistence.rec
 To install the chart with the release name `my-release`:
 
 ```console
-$ helm repo add mrsharky https://charts.mrsharky.com
+$ helm repo add mrsharky https://charts.mrsharky.com/
 $ helm install my-release mrsharky/cooklang
 ```
 
@@ -50,7 +50,7 @@ helm delete cooklang
 ## Packaging
 ```bash
 helm package cooklang
-helm repo index . --url https://charts.mrsharky.com
+helm repo index . --url https://charts.mrsharky.com/
 ```
 
 ## Source Code

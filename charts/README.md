@@ -29,6 +29,7 @@ Only chart directories with a committed `Chart.yaml` are listed here.
 | [`paddleocr-vl`](./paddleocr-vl/)                                               | `PaddleOCR-VL-1.6` |       `0.1.0` | High-performance PaddleOCR-VL OCR and document parsing API.             |
 | [`ps3netsrv`](./ps3netsrv/)                                                     |            `1.0.0` |       `0.1.0` | ps3netsrv deployment for serving PS3 game backups over the network.     |
 | [`termix`](./termix/)                                                           |            `2.0.0` |       `0.1.1` | Termix SSH/server-management web application.                           |
+| [`turbowarp`](./turbowarp/)                                                     |          `a2946ee` |       `0.1.0` | TurboWarp Scratch-compatible editor for local self-hosting.             |
 | [`ubooquity`](./ubooquity/)                                                     |    `version-2.1.2` |       `0.1.0` | Lightweight home server for comics and ebooks.                          |
 
 ## Chart README generation
@@ -48,61 +49,36 @@ pre-commit run helm-docs --all-files
 
 ## Publishing charts
 
-### For each chart directory
+Published chart packages are released through the GitHub Actions workflow in
+[`../.github/workflows/helm-charts-release.yml`](../.github/workflows/helm-charts-release.yml).
+The canonical chart repository URL is:
 
-- `helm dependency update` updates dependencies and the lock file if present.
-- `helm dependency build .` builds dependencies.
-- `helm package .` packages the chart.
-- Move all generated `*.tgz` files into a common folder.
-
-### Generate `index.yaml`
-
-From the common package folder:
-
-```bash
-helm repo index . --url https://charts.mrsharky.com/
+```text
+https://charts.mrsharky.com/
 ```
 
-## Scriptable publishing flow
+The workflow:
 
-Run this from `charts/`:
+- runs when chart versions change in `charts/*/Chart.yaml`
+- packages only charts whose changed `Chart.yaml` declares a new chart version
+- uploads chart `.tgz` packages to GitHub Releases
+- generates `index.yaml` with package URLs that point to GitHub Release assets
+- assembles the static landing page, `index.yaml`, and Artifact Hub metadata into one deployable artifact
+- deploys that artifact to GitHub Pages first and the SFTP-backed `charts.mrsharky.com` host second
 
-```bash
-set -euo pipefail
+### Release policy
 
-CHARTS_DIR="$(pwd)"
-OUTPUT_DIR="$CHARTS_DIR/.packages"
+Chart releases are version-bump driven. Change chart templates, values, or
+documentation freely in pull requests, but publish a chart by bumping that
+chart's `version` in `Chart.yaml`.
 
-ensure_repo() {
-  local name="$1"
-  local url="$2"
+### Artifact Hub
 
-  if helm repo list | awk '{print $1}' | grep -Fxq "$name"; then
-    echo "==> Helm repo '$name' already exists"
-  else
-    helm repo add "$name" "$url"
-  fi
-}
+Artifact Hub should be configured with the canonical Helm repository URL:
 
-ensure_repo library-charts-k8s-at-home https://library-charts.k8s-at-home.com
-ensure_repo bjw-s https://bjw-s-labs.github.io/helm-charts/
-helm repo update
-
-mkdir -p "$OUTPUT_DIR"
-
-find "$CHARTS_DIR" -mindepth 1 -maxdepth 1 -type d | while read -r chart_dir; do
-  if [ ! -f "$chart_dir/Chart.yaml" ]; then
-    continue
-  fi
-
-  echo "==> Processing $(basename "$chart_dir")"
-  (
-    cd "$chart_dir"
-    helm dependency update
-    helm dependency build .
-    helm package . --destination "$OUTPUT_DIR"
-  )
-done
-
-helm repo index "$OUTPUT_DIR" --url https://charts.mrsharky.com/
+```text
+https://charts.mrsharky.com/
 ```
+
+The publishing workflow serves `artifacthub-repo.yml` beside `index.yaml` so
+Artifact Hub can claim and index the repository from the same HTTP path.
