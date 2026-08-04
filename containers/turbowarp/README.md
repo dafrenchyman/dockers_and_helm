@@ -11,6 +11,7 @@ This image builds the TurboWarp GUI/editor from `TurboWarp/scratch-gui` commit `
 - `/config` is optional. Mounting it persists nginx config, logs, and copied static files only. It is not required for children to create Scratch-compatible projects in the TurboWarp GUI.
 - This image does not provide TurboWarp server-side accounts or project persistence.
 - This image intentionally does not implement `turbowarp.org` wildcard aliases; it serves the default static TurboWarp build, including `/editor.html`.
+- Requests to `/`, `/editor`, and `/editor/` redirect to the relative URI `/editor.html` so localhost port mappings such as `:8080` are preserved while the default local endpoint opens the Scratch-compatible editor instead of TurboWarp's upstream project-browser/player landing page.
 
 ## Build
 
@@ -33,7 +34,8 @@ docker run --rm -d \
 Smoke-test the local GUI entrypoints:
 
 ```bash
-curl -fsS http://127.0.0.1:18080/ >/tmp/turbowarp-root.html
+curl -fsSI http://127.0.0.1:18080/ | grep -i '^location: /editor.html'
+curl -fsSI http://127.0.0.1:18080/editor | grep -i '^location: /editor.html'
 curl -fsS http://127.0.0.1:18080/editor.html >/tmp/turbowarp-editor.html
 docker rm -f turbowarp-test
 ```

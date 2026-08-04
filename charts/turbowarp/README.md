@@ -81,30 +81,30 @@ Kubernetes: `>=1.24.0-0`
 | controllers.main.containers.app.image.repository | string | `"ghcr.io/dafrenchyman/turbowarp"` | Repo-owned TurboWarp static web image repository. |
 | controllers.main.containers.app.image.tag | string | `"upstream-a2946ee"` | Image tag pinned to the verified TurboWarp scratch-gui commit `a2946ee`. |
 | controllers.main.containers.app.ports[0] | object | `{"containerPort":80,"name":"web","protocol":"TCP"}` | Main HTTP port exposed by the TurboWarp nginx container. |
-| controllers.main.containers.app.probes.liveness.custom | bool | `true` | Use a fully custom Kubernetes liveness probe spec so the check is exactly HTTP `/` on the named `web` port. |
-| controllers.main.containers.app.probes.liveness.enabled | bool | `true` | Enable liveness probe against the static GUI root to restart nginx if it stops serving. |
-| controllers.main.containers.app.probes.liveness.spec | object | `{"failureThreshold":3,"httpGet":{"path":"/","port":"web"},"initialDelaySeconds":30,"periodSeconds":30}` | Kubernetes liveness probe fields rendered under `livenessProbe`. |
+| controllers.main.containers.app.probes.liveness.custom | bool | `true` | Use a fully custom Kubernetes liveness probe spec so the check is exactly HTTP `/editor.html` on the named `web` port. |
+| controllers.main.containers.app.probes.liveness.enabled | bool | `true` | Enable liveness probe against the editor entrypoint to restart nginx if it stops serving. |
+| controllers.main.containers.app.probes.liveness.spec | object | `{"failureThreshold":3,"httpGet":{"path":"/editor.html","port":"web"},"initialDelaySeconds":30,"periodSeconds":30}` | Kubernetes liveness probe fields rendered under `livenessProbe`. |
 | controllers.main.containers.app.probes.liveness.spec.failureThreshold | int | `3` | Liveness probe failure threshold. |
-| controllers.main.containers.app.probes.liveness.spec.httpGet | object | `{"path":"/","port":"web"}` | HTTP check used by the liveness probe. |
-| controllers.main.containers.app.probes.liveness.spec.httpGet.path | string | `"/"` | HTTP path used by the liveness probe. |
+| controllers.main.containers.app.probes.liveness.spec.httpGet | object | `{"path":"/editor.html","port":"web"}` | HTTP check used by the liveness probe. |
+| controllers.main.containers.app.probes.liveness.spec.httpGet.path | string | `"/editor.html"` | HTTP path used by the liveness probe. This points at the editor, not the upstream project browser home page. |
 | controllers.main.containers.app.probes.liveness.spec.httpGet.port | string | `"web"` | Named container port used by the liveness probe. |
 | controllers.main.containers.app.probes.liveness.spec.initialDelaySeconds | int | `30` | Liveness probe initial delay in seconds. |
 | controllers.main.containers.app.probes.liveness.spec.periodSeconds | int | `30` | Liveness probe interval in seconds. |
-| controllers.main.containers.app.probes.readiness.custom | bool | `true` | Use a fully custom Kubernetes readiness probe spec so the check is exactly HTTP `/` on the named `web` port. |
-| controllers.main.containers.app.probes.readiness.enabled | bool | `true` | Enable readiness probe against the static GUI root so traffic only reaches ready nginx Pods. |
-| controllers.main.containers.app.probes.readiness.spec | object | `{"failureThreshold":3,"httpGet":{"path":"/","port":"web"},"initialDelaySeconds":10,"periodSeconds":10}` | Kubernetes readiness probe fields rendered under `readinessProbe`. |
+| controllers.main.containers.app.probes.readiness.custom | bool | `true` | Use a fully custom Kubernetes readiness probe spec so the check is exactly HTTP `/editor.html` on the named `web` port. |
+| controllers.main.containers.app.probes.readiness.enabled | bool | `true` | Enable readiness probe against the editor entrypoint so traffic only reaches ready nginx Pods. |
+| controllers.main.containers.app.probes.readiness.spec | object | `{"failureThreshold":3,"httpGet":{"path":"/editor.html","port":"web"},"initialDelaySeconds":10,"periodSeconds":10}` | Kubernetes readiness probe fields rendered under `readinessProbe`. |
 | controllers.main.containers.app.probes.readiness.spec.failureThreshold | int | `3` | Readiness probe failure threshold. |
-| controllers.main.containers.app.probes.readiness.spec.httpGet | object | `{"path":"/","port":"web"}` | HTTP check used by the readiness probe. |
-| controllers.main.containers.app.probes.readiness.spec.httpGet.path | string | `"/"` | HTTP path used by the readiness probe. |
+| controllers.main.containers.app.probes.readiness.spec.httpGet | object | `{"path":"/editor.html","port":"web"}` | HTTP check used by the readiness probe. |
+| controllers.main.containers.app.probes.readiness.spec.httpGet.path | string | `"/editor.html"` | HTTP path used by the readiness probe. This points at the editor, not the upstream project browser home page. |
 | controllers.main.containers.app.probes.readiness.spec.httpGet.port | string | `"web"` | Named container port used by the readiness probe. |
 | controllers.main.containers.app.probes.readiness.spec.initialDelaySeconds | int | `10` | Readiness probe initial delay in seconds. |
 | controllers.main.containers.app.probes.readiness.spec.periodSeconds | int | `10` | Readiness probe interval in seconds. |
-| controllers.main.containers.app.probes.startup.custom | bool | `true` | Use a fully custom Kubernetes startup probe spec so the check is exactly HTTP `/` on the named `web` port. |
-| controllers.main.containers.app.probes.startup.enabled | bool | `true` | Enable startup probe against the static GUI root before liveness checks begin. |
-| controllers.main.containers.app.probes.startup.spec | object | `{"failureThreshold":18,"httpGet":{"path":"/","port":"web"},"initialDelaySeconds":10,"periodSeconds":5}` | Kubernetes startup probe fields rendered under `startupProbe`. |
+| controllers.main.containers.app.probes.startup.custom | bool | `true` | Use a fully custom Kubernetes startup probe spec so the check is exactly HTTP `/editor.html` on the named `web` port. |
+| controllers.main.containers.app.probes.startup.enabled | bool | `true` | Enable startup probe against the editor entrypoint before liveness checks begin. |
+| controllers.main.containers.app.probes.startup.spec | object | `{"failureThreshold":18,"httpGet":{"path":"/editor.html","port":"web"},"initialDelaySeconds":10,"periodSeconds":5}` | Kubernetes startup probe fields rendered under `startupProbe`. |
 | controllers.main.containers.app.probes.startup.spec.failureThreshold | int | `18` | Startup probe failure threshold; allows up to 90 seconds after the initial delay. |
-| controllers.main.containers.app.probes.startup.spec.httpGet | object | `{"path":"/","port":"web"}` | HTTP check used by the startup probe. |
-| controllers.main.containers.app.probes.startup.spec.httpGet.path | string | `"/"` | HTTP path used by the startup probe. |
+| controllers.main.containers.app.probes.startup.spec.httpGet | object | `{"path":"/editor.html","port":"web"}` | HTTP check used by the startup probe. |
+| controllers.main.containers.app.probes.startup.spec.httpGet.path | string | `"/editor.html"` | HTTP path used by the startup probe. This points at the editor, not the upstream project browser home page. |
 | controllers.main.containers.app.probes.startup.spec.httpGet.port | string | `"web"` | Named container port used by the startup probe. |
 | controllers.main.containers.app.probes.startup.spec.initialDelaySeconds | int | `10` | Startup probe initial delay in seconds. |
 | controllers.main.containers.app.probes.startup.spec.periodSeconds | int | `5` | Startup probe interval in seconds. |

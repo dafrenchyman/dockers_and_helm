@@ -10,5 +10,3 @@ services:
       PGID: "1000"
       TZ: "Etc/UTC"
       UMASK: "022"
-    volumes:
-      - ./local-data/config:/config

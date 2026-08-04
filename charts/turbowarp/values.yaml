@@ -61,16 +61,16 @@ controllers:
             protocol: TCP
         probes:
           startup:
-            # -- Enable startup probe against the static GUI root before liveness checks begin.
+            # -- Enable startup probe against the editor entrypoint before liveness checks begin.
             enabled: true
-            # -- Use a fully custom Kubernetes startup probe spec so the check is exactly HTTP `/` on the named `web` port.
+            # -- Use a fully custom Kubernetes startup probe spec so the check is exactly HTTP `/editor.html` on the named `web` port.
             custom: true
             # -- Kubernetes startup probe fields rendered under `startupProbe`.
             spec:
               # -- HTTP check used by the startup probe.
               httpGet:
-                # -- HTTP path used by the startup probe.
-                path: /
+                # -- HTTP path used by the startup probe. This points at the editor, not the upstream project browser home page.
+                path: /editor.html
                 # -- Named container port used by the startup probe.
                 port: web
               # -- Startup probe initial delay in seconds.
@@ -80,16 +80,16 @@ controllers:
               # -- Startup probe failure threshold; allows up to 90 seconds after the initial delay.
               failureThreshold: 18
           readiness:
-            # -- Enable readiness probe against the static GUI root so traffic only reaches ready nginx Pods.
+            # -- Enable readiness probe against the editor entrypoint so traffic only reaches ready nginx Pods.
             enabled: true
-            # -- Use a fully custom Kubernetes readiness probe spec so the check is exactly HTTP `/` on the named `web` port.
+            # -- Use a fully custom Kubernetes readiness probe spec so the check is exactly HTTP `/editor.html` on the named `web` port.
             custom: true
             # -- Kubernetes readiness probe fields rendered under `readinessProbe`.
             spec:
               # -- HTTP check used by the readiness probe.
               httpGet:
-                # -- HTTP path used by the readiness probe.
-                path: /
+                # -- HTTP path used by the readiness probe. This points at the editor, not the upstream project browser home page.
+                path: /editor.html
                 # -- Named container port used by the readiness probe.
                 port: web
               # -- Readiness probe initial delay in seconds.
@@ -99,16 +99,16 @@ controllers:
               # -- Readiness probe failure threshold.
               failureThreshold: 3
           liveness:
-            # -- Enable liveness probe against the static GUI root to restart nginx if it stops serving.
+            # -- Enable liveness probe against the editor entrypoint to restart nginx if it stops serving.
             enabled: true
-            # -- Use a fully custom Kubernetes liveness probe spec so the check is exactly HTTP `/` on the named `web` port.
+            # -- Use a fully custom Kubernetes liveness probe spec so the check is exactly HTTP `/editor.html` on the named `web` port.
             custom: true
             # -- Kubernetes liveness probe fields rendered under `livenessProbe`.
             spec:
               # -- HTTP check used by the liveness probe.
               httpGet:
-                # -- HTTP path used by the liveness probe.
-                path: /
+                # -- HTTP path used by the liveness probe. This points at the editor, not the upstream project browser home page.
+                path: /editor.html
                 # -- Named container port used by the liveness probe.
                 port: web
               # -- Liveness probe initial delay in seconds.
