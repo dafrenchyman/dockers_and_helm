@@ -163,3 +163,5 @@ static
 /containers/paddleocr-vl-hps/local-data/
 /containers/turbowarp/docker-compose.yml
 /containers/turbowarp/local-data/
+/containers/pegasus-plus/docker-compose.yml
+/containers/pegasus-plus/local-data/

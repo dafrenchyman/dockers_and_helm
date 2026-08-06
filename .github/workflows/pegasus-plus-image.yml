@@ -1,12 +1,12 @@
-name: Build and Publish Pegasus Eden Image
+name: Build and Publish Pegasus Plus Image
 
 on:
   push:
     branches:
       - main
     paths:
-      - ".github/workflows/pegasus-eden-image.yml"
-      - "containers/pegasus-eden/**"
+      - ".github/workflows/pegasus-plus-image.yml"
+      - "containers/pegasus-plus/**"
   workflow_dispatch:
 
 permissions:
@@ -35,28 +35,23 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository_owner }}/pegasus-eden
+          images: ghcr.io/${{ github.repository_owner }}/pegasus-plus
           tags: |
             type=raw,value=latest
-            type=raw,value=eden-v0.2.1
+            type=raw,value=v0.1.0
             type=sha,format=short,prefix=sha-
           labels: |
-            org.opencontainers.image.title=Pegasus Eden
-            org.opencontainers.image.description=Games on Whales Pegasus frontend with Eden Nintendo Switch emulator integration
+            org.opencontainers.image.title=Pegasus Plus
+            org.opencontainers.image.description=Games on Whales Pegasus frontend with additional emulator integrations
             org.opencontainers.image.source=https://github.com/${{ github.repository }}
             org.opencontainers.image.revision=${{ github.sha }}
 
       - name: Build and publish image
         uses: docker/build-push-action@v6
         with:
-          context: containers/pegasus-eden
-          file: containers/pegasus-eden/Dockerfile
+          context: containers/pegasus-plus
+          file: containers/pegasus-plus/Dockerfile
           platforms: linux/amd64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            GOW_PEGASUS_IMAGE=ghcr.io/games-on-whales/pegasus:fedora
-            EDEN_VERSION=0.2.1
-            EDEN_APPIMAGE_URL=https://stable.eden-emu.dev/v0.2.1/Eden-Linux-v0.2.1-amd64-gcc-standard.AppImage
-            EDEN_APPIMAGE_SHA256=2fae658397daf13c118082a3eb65d61a6519967b5e22e6667756baecf6000c5a

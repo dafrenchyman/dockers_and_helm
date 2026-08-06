@@ -1,7 +1,7 @@
 services:
-  pegasus-eden:
-    image: ghcr.io/dafrenchyman/pegasus-eden:eden-v0.2.1
-    container_name: pegasus-eden
+  pegasus-plus:
+    image: ghcr.io/dafrenchyman/pegasus-plus:v0.1.0
+    container_name: pegasus-plus
     restart: unless-stopped
     environment:
       PUID: "1000"
