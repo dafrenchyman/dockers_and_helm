@@ -21,12 +21,9 @@ LABEL org.opencontainers.image.source="https://github.com/dafrenchyman/dockers_a
 ENV APPIMAGE_EXTRACT_AND_RUN=1
 
 RUN set -eux; \
-    dnf install -y p7zip; \
+    dnf install -y 7zip; \
     dnf clean all; \
-    getent group retro >/dev/null || groupadd -g 1000 retro; \
-    getent passwd retro >/dev/null || useradd -u 1000 -g retro -M -d /home/retro -s /bin/bash retro; \
-    mkdir -p /home/retro; \
-    chown -R retro:retro /home/retro
+    chown -R "${PUID}:${PGID}" /home/retro
 
 RUN set -eux; \
     curl -fsSL "${EDEN_APPIMAGE_URL}" -o /Applications/eden-emu.AppImage; \
