@@ -1,0 +1,16 @@
+services:
+  pegasus-eden:
+    image: ghcr.io/dafrenchyman/pegasus-eden:eden-v0.2.1
+    container_name: pegasus-eden
+    restart: unless-stopped
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: "Etc/UTC"
+    volumes:
+      - ./local-data/roms:/ROMs
+      - ./local-data/bioses:/bioses
+      - ./local-data/home:/home/retro
+    devices:
+      - "nvidia.com/gpu=all"
+    privileged: true
