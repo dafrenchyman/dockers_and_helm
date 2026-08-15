@@ -1,6 +1,6 @@
 # cooklang
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.26.0](https://img.shields.io/badge/AppVersion-0.26.0-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.26.0](https://img.shields.io/badge/AppVersion-0.26.0-informational?style=flat-square)
 
 Cooklang recipe server powered by CookCLI
 
@@ -10,7 +10,7 @@ Cooklang recipe server powered by CookCLI
 
 Chart uses the awesome common library from [bjw-s-labs](https://bjw-s-labs.github.io/helm-charts/)
 
-This chart deploys the upstream Cooklang CookCLI server. Enable `persistence.recipes` and point it at a directory containing your `.cook` recipes.
+This chart deploys the upstream Cooklang CookCLI server. Enable `persistence.recipes` for persistent `.cook` recipes. For PVC-backed storage, keep the default `type: persistentVolumeClaim` or set `existingClaim`. For a node directory, set `type: hostPath` and `hostPath` to the node path (for example `/mount/persistence`). In every case, the chart mounts the volume inside the `main/app` container at `/recipes`, which is the path served by the image.
 
 ## Installing Chart from repo
 
@@ -90,10 +90,10 @@ Kubernetes: `>=1.24.0-0`
 | ingress.main.hosts[0].paths[0].service.port | string | `"http"` | Use the HTTP service port defined above. |
 | ingress.main.tls | list | `[]` | Optional TLS entries for HTTPS-enabled ingress setups. |
 | persistence.recipes.accessMode | string | `"ReadWriteOnce"` | Access mode for the generated PVC when `type=persistentVolumeClaim`. |
+| persistence.recipes.advancedMounts | object | `{"main":{"app":[{"path":"/recipes","readOnly":false}]}}` | Mount the volume at the path served by the upstream image. This uses `advancedMounts` to target the main/app container explicitly and to avoid bjw-s common v4's hostPath default of mounting at the host path inside the container. |
 | persistence.recipes.enabled | bool | `false` | Enable a volume for your `.cook` recipe files. Without this, the server starts but has no recipe collection to serve. |
-| persistence.recipes.mountPath | string | `"/recipes"` | Mount path expected by the upstream Cooklang image. |
 | persistence.recipes.size | string | `"1Gi"` | Requested PVC size for the recipes volume. Plain text recipes are small, so the default can stay modest. |
-| persistence.recipes.type | string | `"persistentVolumeClaim"` | Default to a PVC-managed volume. Advanced users can switch this to `existingClaim`, `hostPath`, or another bjw-s-supported type. |
+| persistence.recipes.type | string | `"hostPath"` | Default to a PVC-managed volume. To mount a node directory such as `/mount/persistence`, set `type: hostPath` and `hostPath: /mount/persistence`; the chart still mounts it inside the container at `/recipes`. |
 | service.main.controller | string | `"main"` | Route traffic to the `main` controller. |
 | service.main.enabled | bool | `true` | Create a Service for the main Cooklang web application. |
 | service.main.ports.http.port | int | `9080` | Service port for the Cooklang web UI. |

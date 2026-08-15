@@ -12,7 +12,7 @@
 
 Chart uses the awesome common library from [bjw-s-labs](https://bjw-s-labs.github.io/helm-charts/)
 
-This chart deploys the upstream Cooklang CookCLI server. Enable `persistence.recipes` and point it at a directory containing your `.cook` recipes.
+This chart deploys the upstream Cooklang CookCLI server. Enable `persistence.recipes` for persistent `.cook` recipes. For PVC-backed storage, keep the default `type: persistentVolumeClaim` or set `existingClaim`. For a node directory, set `type: hostPath` and `hostPath` to the node path (for example `/mount/persistence`). In every case, the chart mounts the volume inside the `main/app` container at `/recipes`, which is the path served by the image.
 
 ## Installing Chart from repo
 

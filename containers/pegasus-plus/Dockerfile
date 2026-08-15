@@ -22,8 +22,7 @@ ENV APPIMAGE_EXTRACT_AND_RUN=1
 
 RUN set -eux; \
     dnf install -y 7zip; \
-    dnf clean all; \
-    chown -R "${PUID}:${PGID}" /home/retro
+    dnf clean all
 
 RUN set -eux; \
     curl -fsSL "${EDEN_APPIMAGE_URL}" -o /Applications/eden-emu.AppImage; \

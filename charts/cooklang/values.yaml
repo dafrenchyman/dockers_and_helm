@@ -59,16 +59,24 @@ persistence:
     # -- Enable a volume for your `.cook` recipe files. Without this, the server
     # starts but has no recipe collection to serve.
     enabled: false
-    # -- Default to a PVC-managed volume. Advanced users can switch this to
-    # `existingClaim`, `hostPath`, or another bjw-s-supported type.
-    type: persistentVolumeClaim
+    # -- Default to a PVC-managed volume. To mount a node directory such as
+    # `/mount/persistence`, set `type: hostPath` and `hostPath: /mount/persistence`;
+    # the chart still mounts it inside the container at `/recipes`.
+    type: hostPath
     # -- Access mode for the generated PVC when `type=persistentVolumeClaim`.
     accessMode: ReadWriteOnce
     # -- Requested PVC size for the recipes volume. Plain text recipes are
     # small, so the default can stay modest.
     size: 1Gi
-    # -- Mount path expected by the upstream Cooklang image.
-    mountPath: /recipes
+    # -- Mount the volume at the path served by the upstream image. This uses
+    # `advancedMounts` to target the main/app container explicitly and to avoid
+    # bjw-s common v4's hostPath default of mounting at the host path inside the
+    # container.
+    advancedMounts:
+      main:
+        app:
+          - path: /recipes
+            readOnly: false
 
 ################################################################################
 # Ingress: optional HTTP(S) entrypoint for browsers
