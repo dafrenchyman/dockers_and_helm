@@ -1,6 +1,6 @@
 # cooklang
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.26.0](https://img.shields.io/badge/AppVersion-0.26.0-informational?style=flat-square)
+![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.33.1](https://img.shields.io/badge/AppVersion-0.33.1-informational?style=flat-square)
 
 Cooklang recipe server powered by CookCLI
 
@@ -73,10 +73,14 @@ Kubernetes: `>=1.24.0-0`
 |-----|------|---------|-------------|
 | controllers.main.containers.app.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy for the main Cooklang container. |
 | controllers.main.containers.app.image.repository | string | `"ghcr.io/cooklang/cookcli"` | Upstream Cooklang server image repository. |
-| controllers.main.containers.app.image.tag | string | `"0.26.0"` | Upstream image tag pinned to the latest verified GitHub release for CookCLI as of March 22, 2026. |
+| controllers.main.containers.app.image.tag | string | `"0.33.1"` | Upstream image tag pinned to the latest verified GitHub release for CookCLI as of August 15, 2026. |
 | controllers.main.containers.app.ports[0].containerPort | int | `9080` | Main HTTP port exposed by the Cooklang server. |
 | controllers.main.containers.app.ports[0].name | string | `"web"` |  |
 | controllers.main.containers.app.ports[0].protocol | string | `"TCP"` |  |
+| controllers.main.pod.securityContext.fsGroup | int | `1000` | Make mounted recipe volumes group-writable for the CookCLI GID. |
+| controllers.main.pod.securityContext.fsGroupChangePolicy | string | `"OnRootMismatch"` | Avoid recursively changing volume ownership when the root already matches. |
+| controllers.main.pod.securityContext.runAsGroup | int | `1000` | Run CookCLI as the fixed GID used by current upstream images. |
+| controllers.main.pod.securityContext.runAsUser | int | `1000` | Run CookCLI as the fixed UID used by current upstream images. |
 | controllers.main.replicas | int | `1` | Keep a single replica unless you have shared storage and have validated the image behavior for your environment. |
 | controllers.main.strategy | string | `"Recreate"` | Recreate avoids two Pods briefly sharing the same writable recipes volume during upgrades. |
 | controllers.main.type | string | `"deployment"` | Deploy Cooklang as a Deployment rather than a StatefulSet or CronJob. |

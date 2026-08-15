@@ -21,8 +21,8 @@ controllers:
           # -- Upstream Cooklang server image repository.
           repository: ghcr.io/cooklang/cookcli
           # -- Upstream image tag pinned to the latest verified GitHub release
-          # for CookCLI as of March 22, 2026.
-          tag: 0.26.0
+          # for CookCLI as of August 15, 2026.
+          tag: 0.33.1
           # -- Image pull policy for the main Cooklang container.
           pullPolicy: IfNotPresent
         ports:
@@ -30,6 +30,17 @@ controllers:
             # -- Main HTTP port exposed by the Cooklang server.
             containerPort: 9080
             protocol: TCP
+    pod:
+      securityContext:
+        # -- Run CookCLI as the fixed UID used by current upstream images.
+        runAsUser: 1000
+        # -- Run CookCLI as the fixed GID used by current upstream images.
+        runAsGroup: 1000
+        # -- Make mounted recipe volumes group-writable for the CookCLI GID.
+        fsGroup: 1000
+        # -- Avoid recursively changing volume ownership when the root already matches.
+        fsGroupChangePolicy: OnRootMismatch
+
 
 ################################################################################
 # Service: internal access to the Cooklang web UI

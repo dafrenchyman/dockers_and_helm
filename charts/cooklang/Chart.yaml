@@ -16,5 +16,5 @@ sources:
   - https://github.com/cooklang/cookcli
   - https://bjw-s-labs.github.io/helm-charts/
 icon: https://cooklang.org/favicon.png
-version: 0.1.1
-appVersion: 0.26.0
+version: 0.1.2
+appVersion: 0.33.1
